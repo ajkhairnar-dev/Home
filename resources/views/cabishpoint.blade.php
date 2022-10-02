@@ -1,4 +1,8 @@
 @include('layouts.nav')
+<?php 
+
+
+?>
 <section class="small-section booking_confirmation">
         <div class="review-section">
             <div class="review_box">
@@ -6,12 +10,12 @@
                     <tbody>
                         <tr>
                             <td class="txtbold">Total Payable Amount</td>
-                            <td class="txtbold">₹ {{$data['amount']}}</td>
+                            <td class="txtbold">₹ {{$data['payment']['amount']}}</td>
                         </tr>
                         <tr>
                             <td colspan="2"><a href="#" class="user user-light text-dark text-capitalize rounded5">
                                     <span class="ti-wallet"></span>
-                                    <span class="icon-name ">Cabish Points Available {{$data['pts']}} points</span>
+                                    <span class="icon-name ">Cabish Points Available {{$data['payment']['pts']}} points</span>
                                 </a></td>
                         </tr>
                         <tr class="active cabpt">
@@ -21,11 +25,11 @@
                             </td> -->
 
                             <td class="txtmid">
-                                <input type="hidden" id="price" value="{{$data['amount']}}">
-                                <input type="checkbox" id="cabpoints" value="{{$data['ptsrupees']}}" class="form-check-input checkbox_animated" name="paytype">
+                                <input type="hidden" id="price" value="{{$data['payment']['amount']}}">
+                                <input type="checkbox" id="cabpoints" value="{{$data['payment']['ptsrupees']}}" class="form-check-input checkbox_animated" name="paytype">
                                 <label class="form-check-label title" for="cabpoints">Apply Cabish Points</label>
                             </td>
-                            <td class="txtmid">₹{{$data['ptsrupees']}}</td>
+                            <td class="txtmid">₹{{$data['payment']['ptsrupees']}}</td>
                         </tr>
 
                         <tr class="msg" style="display:none;">
@@ -38,7 +42,7 @@
 
                         <tr>
                             <td colspan="2">
-                                <a href="javascript:;" id="paynow" class="bluePrimarybtn payNow font22 appendBottom10">Pay ₹ <span id="pp">{{$data['amount']}}</span> Now
+                                <a href="javascript:;" id="paynow" class="bluePrimarybtn payNow font22 appendBottom10">Pay ₹ <span id="pp">{{$data['payment']['amount']}}</span> Now
                             </a>
                         </td>
                         </tr>
@@ -77,19 +81,18 @@
         });
 
         
-        
         jQuery(function($){
             $("#paynow").click(function(){
                 var obj = {!! json_encode($data) !!}
+                console.log(obj)
                 var url = {!! json_encode(url('paytm-payment')) !!}
                 if($('#cabpoints').is(':checked')){
-                    obj.amount = Number(obj.amount) - Number(obj.ptsrupees)
-                    obj.isptsapply = 'YES'
+                    obj.payment.amount = Number(obj.payment.amount) - Number(obj.payment.ptsrupees)
+                    obj.payment.isptsapply = 'YES'
                 }else{
-                    obj.amount = Number(obj.amount)
-                    obj.isptsapply = 'NO'
+                    obj.payment.amount = Number(obj.payment.amount)
+                    obj.payment.isptsapply = 'NO'
                 }
-                console.log(obj)
                 $.redirect(url, obj, "POST");
             });
         })

@@ -682,12 +682,10 @@ jQuery(function($){
             maxlength:10
         },
         pickup:{
-            required: true,
-            maxlength: 50
+            required: true
         },
         drop:{
-            required: true,
-            maxlength: 50
+            required: true
         },
         specialrequest:{
             required:false
@@ -714,12 +712,10 @@ jQuery(function($){
             maxlength: "Your contact maxlength should be 10 digit."
         },
         pickup: {
-          required: "Please enter pickup address",
-          maxlength: "The pickup address should less than or equal to 50 characters"
+          required: "Please enter pickup address"
         },
         drop: {
-          required: "Please enter drop address",
-          maxlength: "The drop address should less than or equal to 50 characters"
+          required: "Please enter drop address"
         },
         specialrequest:{
             required:"Optional"
@@ -734,20 +730,28 @@ jQuery(function($){
       var tk = {!! json_encode(csrf_token()) !!}
       var object = {
         _token:tk,
-        fullName : $("#fullName").val(),
-        gender : $("#gender").val(),
-        email : $("#email").val(),
-        contact : $("#contact").val(),
-        pickup : $(".pickupadd").val(),
-        drop : $(".dropadd").val(),
-        specialrequest : $("#specialrequest").val(),
-        acceptTC : $("#acceptTC").val(),
-        paytype : paytype,
-        amount : finalamount == 0 ? Number(amount) : Number(finalamount),
-        promocode : finalselectedPromocode,
-        discountamount : finaldiscountAmount
+        userdetails :{
+            fullName : $("#fullName").val(),
+            gender : $("#gender").val(),
+            email : $("#email").val(),
+            contact : $("#contact").val(),
+            pickup : $(".pickupadd").val(),
+            drop : $(".dropadd").val(),
+            specialrequest : $("#specialrequest").val(),
+            acceptTC : $("#acceptTC").val()
+        },
+        payment : {
+            paytype : paytype,
+            amount : finalamount == 0 ? Number(amount) : Number(finalamount),
+            promocode : finalselectedPromocode,
+            discountamount : finaldiscountAmount,
+        },
+        vehicles:{!! json_encode($vdata) !!},
+        distance:{!! json_encode($distance) !!},
+        triptype:{!! json_encode($triptype) !!}
       }
    
+      console.log(object)
       var url = {!! json_encode(url('cabishpoint')) !!}
       $.redirect(url, object, "POST");
    

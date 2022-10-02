@@ -66,6 +66,7 @@ Route::get('/offers/{slug}', [App\Http\Controllers\PagesController::class, 'sing
 Route::post('/cabishpoint', [App\Http\Controllers\BookingController::class, 'cabishpoint']);
 Route::post('/paymentstatus', [App\Http\Controllers\BookingController::class, 'paymentstatus']);
 Route::get('/invoice', [App\Http\Controllers\BookingController::class, 'invoicedownload']);
+Route::post('/customer-registration', [App\Http\Controllers\BookingController::class, 'customerregistration']);
 
 
 /*forcalcualtin*/

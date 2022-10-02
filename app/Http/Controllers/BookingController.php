@@ -13,17 +13,37 @@ class BookingController extends Controller
         //echo $name;
         return view('cablist');
     }
+
+    public function customerregistration(Request $request){
+
+        $reqBody = $request->all();
+        //  = DB::table('customer')->where('mobile',$request->query('mobile'))->first();
+
+        $data= DB::select("select * from customer where mobile = '".$reqBody['mobile']."'");
+
+        if(count($data) > 0){
+            // return $request->all()
+            return response()->json([
+                'message' => "Product saved successfully!",
+                'product' => $data
+            ], 200);
+        }else{
+            return response()->json([
+                'message' => "Product saved successfully!"
+            ], 200);
+        }
+        
     
-    
+    }
         //cabish point
     public function cabishpoint(Request $request){
+
         // 10 points == 1rs
         $total_cbspoint = 50;
         $pointtorupees = round($total_cbspoint/10);
         $data = $request->all();
-        $data['pts'] = $total_cbspoint; 
-        $data['ptsrupees'] = $pointtorupees;      
-        print_r($data);
+        $data['payment']['pts'] = $total_cbspoint; 
+        $data['payment']['ptsrupees'] = $pointtorupees;      
         return view('cabishpoint', ['data' => $data]);
     }
     
@@ -92,13 +112,11 @@ class BookingController extends Controller
     }
 
 
-
     public function booking(Request $request) {
         $distance = getDistance($request->pickup, $request->drop, "K");
-        
         $vdata = DB::table('vehicle_types')->where('type',$request->vehicletype)->first();
-        
-        return view('booking',['data' => $request, 'distance'=>$distance,'vdata'=>$vdata]);
+        $triptype = DB::table('trip_types')->where('code',$request->triptype)->first();
+        return view('booking',['data' => $request, 'distance'=>$distance,'vdata'=>$vdata, 'triptype'=>$triptype]);
     }
 
 
@@ -273,5 +291,7 @@ function getDistance($addressFrom, $addressTo){
     $response = json_decode($response, true);
     return preg_replace("/[^0-9.]/", "",$response['rows'][0]['elements'][0]['distance']['text']);
 }
+
+
 
 

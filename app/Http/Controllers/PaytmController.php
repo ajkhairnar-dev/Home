@@ -14,13 +14,14 @@ class PaytmController extends Controller
      */
     public function paytmPayment(Request $request)
     {
+        
         $payment = PaytmWallet::with('receive');
         $payment->prepare([
           'order' => rand(),
           'user' => rand(10,1000),
           'mobile_number' => '123456789',
           'email' => 'paytmtest@gmail.com',
-          'amount' => $request->amount,
+          'amount' => $request['payment']['amount'],
           'callback_url' => route('paytm.callback'),
         ]);
         return $payment->receive();
