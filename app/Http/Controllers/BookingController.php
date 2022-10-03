@@ -23,9 +23,7 @@ class BookingController extends Controller
     public function customerregistration(Request $request){
         $reqBody = $request->all();
         //  = DB::table('customer')->where('mobile',$request->query('mobile'))->first();
-
         $data= DB::select("select id,email,mobile,name,cabishpoints from customer where mobile = '".$reqBody['mobile']."'");
-
         if(count($data) > 0){
             
             $isLogindata = array(
@@ -43,10 +41,22 @@ class BookingController extends Controller
                 'message' => "Login Successfully !"
             ], 200);
         }else{
+
+            $data['mobile'] = $reqBody['mobile'];
+            DB::table('customer')->insert($data);
+            $data= DB::select("select id,email,mobile,name,cabishpoints from customer where mobile = '".$reqBody['mobile']."'");
+            $isLogindata = array(
+                'id' => $data[0]->id,
+                'name' => isset($data[0]->name) ? $data[0]->name  : 'Guest',
+                'mobile'=> $data[0]->mobile,
+                'email' => $data[0]->email,
+                'cabishpoint' => $data[0]->cabishpoints
+            );
+            session()->put('isLogin',$isLogindata);
             return response()->json([
-                'status' => false,
-                'message' => "Something wends wrong !"
-            ], 400);
+                'status' => true,
+                'message' => "Login Successfully !"
+            ], 200);
         }
     }
 
@@ -58,6 +68,11 @@ class BookingController extends Controller
         $total_cbspoint = 50;
         $pointtorupees = round($total_cbspoint/10);
         $data = $request->all();
+        
+        $data['cabishpoint']['custtotalpoints'] = session()->get('isLogin')['cabishpoint'];
+        $data['cabishpoint']['redeempoint'] = ((int)$data['cabishpoint']['custtotalpoints'] >= (int)$data['sitesetting']['cabish_redem_limit']) ? (int)$data['sitesetting']['cabish_redem_limit'] : (int)$data['cabishpoint']['custtotalpoints'];
+        $data['cabishpoint']['pointstorupees']  = $data['cabishpoint']['redeempoint'];
+
         $data['payment']['pts'] = $total_cbspoint; 
         $data['payment']['ptsrupees'] = $pointtorupees;      
         return view('cabishpoint', ['data' => $data]);
@@ -67,15 +82,91 @@ class BookingController extends Controller
     
     //payment status
     public function paymentstatus(){
-        // session()->put('isLogin',$isLogindata);
-       
-        dd(session()->get('isLogin'));
-        dd(session()->get('bookingdetail'));
+
+        $customer = session()->get('isLogin');
+        $bd= session()->get('bookingdetail');
+        $point = 0;
+        //------------- cabish point --------- 
+        //debit cabish point
+        if($bd['cabishpoint']['isptsapply'] == "YES"){
+            $point = (int)$bd['cabishpoint']['custtotalpoints'] - (int)$bd['cabishpoint']['redeempoint'];
+            
+            $cabishupdate['customer_id'] = session()->get('isLogin')['mobile'];
+            $cabishupdate['types'] = 0;
+            $cabishupdate['points'] = (int)$bd['cabishpoint']['redeempoint'];
+            DB::table('cabishpoints')->insert($cabishupdate);
+        }
+        //get new points 
+        $percentage = (int)$bd['sitesetting']['cabishpoints'];
+        $percentInDecimal = $percentage / 100;
+        $getnewPoints = round(($percentInDecimal * (int)$bd['transaction']['TXNAMOUNT']));
+        if($getnewPoints >= $bd['sitesetting']['cabish_limit']){
+            $getnewPoints = (int)$bd['sitesetting']['cabish_limit'];
+        }
+        $point = $point +  $getnewPoints;
+
+        //update customer table for cabish point
+        DB::table('customer')
+            ->where('mobile', $customer['mobile'])
+            ->update(['cabishpoints' =>  $point]);
+
+        //--------------------------------------------------------------
+        $tripmeta = session()->get('searchdata');
+
         $booking['booking_id'] = $this->generateUniqueCode();
-        $booking['booking_id'] = $this->generateUniqueCode();
-        return view('paymentstatus');
+        $booking['customer_id'] = $customer['id'];
+        $booking['trip_types'] = (int)$bd['triptype']['id'];
+        $booking['vehicle_types'] = $bd['vehicles']['id'];
+        $booking['pick_location'] = $tripmeta['pickup'];
+        $booking['drop_location'] = $tripmeta['drop'];
+        
+        
+        //booking details 
+        $bookingdetails['booking_id'] = $booking['booking_id'];
+        $bookingdetails['full_name']  = $bd['userdetails']['fullName'];
+        $bookingdetails['gender']  = $bd['userdetails']['fullName'];
+        $bookingdetails['email']  = $bd['userdetails']['email'];
+        $bookingdetails['contact']  = $bd['userdetails']['contact'];
+        $bookingdetails['pick_address']  = $bd['userdetails']['pickup'];
+        $bookingdetails['drop_address']  = $bd['userdetails']['drop'];
+        $bookingdetails['request']  = $bd['userdetails']['specialrequest'];
+        $bookingdetails['distance'] = $bd['distance'];
+        $bookingdetails['date'] = $tripmeta['ddate'];
+        $bookingdetails['time'] = $tripmeta['dtime'];
+
+        //transaction
+        $transaction['booking_id'] = $booking['booking_id'];
+        $transaction['type'] = $bd['triptype']['id'];
+        $transaction['final_amt'] = (int)$bd['payment']['amount'];
+        $transaction['balance'] = (int)$bd['payment']['remaining'];
+        $transaction['mid'] = $bd['transaction']['MID'];
+        $transaction['txnid'] = $bd['transaction']['TXNID'];
+        $transaction['txnamount'] = $bd['transaction']['TXNAMOUNT'];
+        $transaction['paymentmode'] = $bd['transaction']['PAYMENTMODE'];
+        $transaction['currency'] = $bd['transaction']['CURRENCY'];
+        $transaction['txndate'] = $bd['transaction']['TXNDATE'];
+        $transaction['status'] = $bd['transaction']['STATUS'];
+        $transaction['respcode'] = $bd['transaction']['RESPCODE'];
+        $transaction['respmsg'] = $bd['transaction']['RESPMSG'];
+        $transaction['gatewayname'] = $bd['transaction']['GATEWAYNAME'];
+        $transaction['banktxnid'] = $bd['transaction']['BANKTXNID'];
+        $transaction['bankname'] = $bd['transaction']['BANKNAME'];
+        $transaction['checksumhash'] = $bd['transaction']['CHECKSUMHASH'];
+
+
+        DB::table('bookings')->insert($booking);
+        DB::table('booking_details')->insert($bookingdetails);
+        DB::table('transcations')->insert($transaction);
+
+        $customer = session()->get('isLogin');
+        $customer['cabishpoint'] = $point;
+
+        session()->put('isLogin',$customer);
+
+        return view('paymentstatus',['data' => $bd]);
     }
 
+    //generate unique id
     public function generateUniqueCode()
     {
         do {
@@ -113,6 +204,8 @@ class BookingController extends Controller
         $tripmeta['ddate'] = $request->query('ddate');
         $tripmeta['dtime'] = $request->query('dtime');
 
+        session()->put('searchdata', $tripmeta);
+
         switch ($trip) {
         case "ONEWAY":
             $data = oneway($request);
@@ -146,7 +239,8 @@ class BookingController extends Controller
         $distance = getDistance($request->pickup, $request->drop, "K");
         $vdata = DB::table('vehicle_types')->where('type',$request->vehicletype)->first();
         $triptype = DB::table('trip_types')->where('code',$request->triptype)->first();
-        return view('booking',['data' => $request, 'distance'=>$distance,'vdata'=>$vdata, 'triptype'=>$triptype]);
+        $sitesetting = DB::table('site_settings')->first();
+        return view('booking',['data' => $request, 'distance'=>$distance,'vdata'=>$vdata, 'triptype'=>$triptype, 'sitesetting'=>$sitesetting]);
     }
 
 

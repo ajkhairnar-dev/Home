@@ -416,6 +416,7 @@ jQuery(function($){
     
             }else{
                 var code = $("#otpverify").val(); 
+                $('.otpshow').attr('disabled',true);
                 coderesult.confirm(code).then(function (result) {
                     var user=result.user;
                     $(".showerralert").hide();
@@ -425,7 +426,7 @@ jQuery(function($){
                     $.ajax({    
                                 type:'POST',  
                                 url:"http://127.0.0.1:8000/customer-registration",
-                                data: { _token:tk, mobile:mobile}, 
+                                data: { _token:tk, mobile:mobile }, 
                                 success: function (data, status, xhr) {
                                     location.reload();
                                 },
@@ -434,6 +435,7 @@ jQuery(function($){
                                 }
                     });
                 }).catch(function (error) {
+                    $('.otpshow').attr('disabled',false);
                     $(".showalert").hide();
                     $(".showerralert").show();
                 });

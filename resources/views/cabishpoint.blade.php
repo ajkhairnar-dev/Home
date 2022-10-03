@@ -15,22 +15,30 @@
                         <tr>
                             <td colspan="2"><a href="#" class="user user-light text-dark text-capitalize rounded5">
                                     <span class="ti-wallet"></span>
-                                    <span class="icon-name ">Cabish Points Available {{$data['payment']['pts']}} points</span>
+                                    <span class="icon-name ">Cabish Points Available {{$data['cabishpoint']['custtotalpoints']}} points</span><br>
+                                    @if($data['cabishpoint']['custtotalpoints'] != 0)
+                                    <span class="icon-name " style="font-size: 14px; color: red;">You can only use {{$data['cabishpoint']['redeempoint']}} points</span>
+                                    @endif
                                 </a></td>
                         </tr>
-                        <tr class="active cabpt">
-                            <!-- <td class="txtmid">
-                                <input type="hidden" id="price" value="2318">
-                                <label><input type="checkbox" id="cabpoints" value="50" name="paytype"> <span class="ti-server"></span> Apply Cabish Points</label>
-                            </td> -->
 
-                            <td class="txtmid">
-                                <input type="hidden" id="price" value="{{$data['payment']['amount']}}">
-                                <input type="checkbox" id="cabpoints" value="{{$data['payment']['ptsrupees']}}" class="form-check-input checkbox_animated" name="paytype">
-                                <label class="form-check-label title" for="cabpoints">Apply Cabish Points</label>
+                        @if($data['cabishpoint']['custtotalpoints'] == 0)
+                        <tr class="active cabpt">
+                            <td class="txtmid" colspan="2" style="text-align: center;color: red;">
+                                <label class="form-check-label title" for="cabpoints">Sorry no cabish point available.</label>
                             </td>
-                            <td class="txtmid">₹{{$data['payment']['ptsrupees']}}</td>
                         </tr>
+                        @else 
+                        <tr class="active cabpt">
+                                <td class="txtmid">
+                                    <input type="hidden" id="price" value="{{$data['payment']['amount']}}">
+                                    <input type="checkbox" id="cabpoints" value="{{$data['cabishpoint']['pointstorupees']}}" class="form-check-input checkbox_animated" name="paytype">
+                                    <label class="form-check-label title" for="cabpoints">Apply Cabish Points</label>
+                                </td>
+                                <td class="txtmid" >₹{{$data['cabishpoint']['pointstorupees']}}</td>
+                        </tr>
+
+                        @endif
 
                         <tr class="msg" style="display:none;">
                             <td colspan="2" class="text-center">
@@ -86,12 +94,13 @@
                 var obj = {!! json_encode($data) !!}
                 var url = {!! json_encode(url('paytm-payment')) !!}
                 if($('#cabpoints').is(':checked')){
-                    obj.payment.amount = Number(obj.payment.amount) - Number(obj.payment.ptsrupees)
-                    obj.payment.isptsapply = 'YES'
+                    obj.payment.amount = Number(obj.payment.amount) - Number(obj.cabishpoint.pointstorupees)
+                    obj.cabishpoint.isptsapply = 'YES'
                 }else{
                     obj.payment.amount = Number(obj.payment.amount)
-                    obj.payment.isptsapply = 'NO'
+                    obj.cabishpoint.isptsapply = 'NO'
                 }
+                console.log(obj)
                 $.redirect(url, obj, "POST");
             });
         })

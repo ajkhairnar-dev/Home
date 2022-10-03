@@ -613,6 +613,7 @@ var finalselectedPromocode = '';
 var discountAmount = 0;
 var finaldiscountAmount = 0;
 var finalamount = 0;
+var mainprice = {!! json_encode(round($data->price)) !!}
 $(document).ready(function(){	
     
     //paytype
@@ -744,15 +745,16 @@ jQuery(function($){
         payment : {
             paytype : paytype,
             amount : finalamount == 0 ? Number(amount) : Number(finalamount),
+            remaining: paytype == "fullpayment" ? 0 : Number(mainprice) - Number(finalamount),
             promocode : finalselectedPromocode,
             discountamount : finaldiscountAmount,
         },
         vehicles:{!! json_encode($vdata) !!},
         distance:{!! json_encode($distance) !!},
-        triptype:{!! json_encode($triptype) !!}
+        triptype:{!! json_encode($triptype) !!},
+        sitesetting : {!! json_encode($sitesetting) !!}
       }
    
-      console.log(object)
       var url = {!! json_encode(url('cabishpoint')) !!}
       $.redirect(url, object, "POST");
    

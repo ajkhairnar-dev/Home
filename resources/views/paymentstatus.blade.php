@@ -7,7 +7,7 @@
                     <img src="../assets/images/cab/car/2.png" class="img-fluid blur-up lazyload" alt="">
                     <h2>Payment Successful ! get ready to ride</h2>
                     <p>thank you for you payment. we have received your payment successfully. your transaction ID is
-                       , you will get an email invoice soon!</p>
+                       "{{$data['transaction']['TXNID']}}", you will get an email invoice soon!</p>
                     <button type="submit" class="btn btn-solid color1">download invoice</button>
                 </div>
             </div>
