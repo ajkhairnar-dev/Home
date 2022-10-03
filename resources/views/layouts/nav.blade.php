@@ -107,44 +107,33 @@
 
                         <ul class="header-right">
                             <!-- Authentication Links -->
-                        @guest
-                            @if (Route::has('login'))
-                            <li>
-                                <a data-bs-toggle="modal" data-bs-target="#registration_popUp" class="user user-light text-dark text-capitalize rounded5">
-                                    <span class="ti-user"></span>
-                                    <span class="icon-name">{{ __('Login') }}</span>
-                                </a>
-                            </li>
+                        
+                            @if(session()->has('isLogin'))
                                 
-                            @endif
-                        @else
-                            
-                            
-                            <li>
-                                <a href="my-profile.php" class="user user-light text-dark text-capitalize rounded5">
-                                    <span class="ti-user"></span>
-                                    <span class="icon-name">welcome {{ Auth::user()->name }}</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" class="user user-light text-dark text-capitalize rounded5">
-                                    <span class="ti-server"></span>
-                                    <span class="icon-name ">50 points</span>
-                                </a>
-                            </li>
-                            
-                            <li>
-                            <a  href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
+                                <li>
+                                    <a href="my-profile.php" class="user user-light text-dark text-capitalize rounded5">
+                                        <span class="ti-user"></span>
+                                        <span class="icon-name">welcome {{ session()->get('isLogin')['name'] }}</span>
                                     </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
-                            </li>
-                        @endguest
+                                </li>
+                                <li>
+                                    <a href="#" class="user user-light text-dark text-capitalize rounded5">
+                                        <span class="ti-server"></span>
+                                        <span class="icon-name ">{{ session()->get('isLogin')['cabishpoint'] }} points</span>
+                                    </a>
+                                </li>
+                                
+                                <li>
+                                <a  href="{{ route('logout') }}">{{ __('Logout') }} </a>
+                                </li>
+                            @else
+                            <li>
+                                    <a data-bs-toggle="modal" data-bs-target="#registration_popUp" class="user user-light text-dark text-capitalize rounded5">
+                                        <span class="ti-user"></span>
+                                        <span class="icon-name">{{ __('Login') }}</span>
+                                    </a>
+                                </li>
+                            @endif
                             <li>
                                 <a href="tel:+918989282811" class="user user-light text-dark text-capitalize rounded5">
                                     <span class="ti-headphone-alt"></span>

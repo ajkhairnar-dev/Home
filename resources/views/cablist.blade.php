@@ -5,6 +5,7 @@
 @include('layouts.cabfiltertop')
 
 
+
     <!-- section start -->
     <section class="pt-0 bg-inner small-section">
         <div class="container cabcontainer">
@@ -163,12 +164,11 @@
                                                                         <input type="hidden" value="{{$c->toll_tax}}" name="toll_tax">
                                                                         <input type="hidden" value="{{$tripmeta['ddate']}}" name="ddate">
                                                                         
-                                                                       
-                                                                        
-                                                                        
-                                                                        @guest
-                                                                        <button  data-bs-toggle="modal" data-bs-target="#registration_popUp"  class="select-btn btn btn-solid color1 rounded-3" type="submit">select</button>
-                                                                        @endguest
+                                                                        @if(session()->has('isLogin'))
+                                                                            <button  class="select-btn btn btn-solid color1 rounded-3" type="submit">select</button>
+                                                                        @else
+                                                                            <a  data-bs-toggle="modal" data-bs-target="#registration_popUp"  class="select-btn btn btn-solid color1 rounded-3">select</a>
+                                                                        @endif
                                                                         
                                                                         
                                                                     </form>

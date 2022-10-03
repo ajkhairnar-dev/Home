@@ -15,6 +15,7 @@ class PaytmController extends Controller
     public function paytmPayment(Request $request)
     {
         
+      
         $payment = PaytmWallet::with('receive');
         $payment->prepare([
           'order' => rand(),

@@ -554,10 +554,9 @@
                                             </tr>
                                                <tr>
                                                 <td colspan="2">
-                                                    <div class="coupon_saved box">
-                                                        coupon code applyed and <br> you saved RS 100
+                                                    <div class="coupon_saved box" style="display:none;">
+                                                        
                                                     </div>
-
                                                 </td>
                                             </tr>
                                             <tr>
@@ -644,6 +643,8 @@ $(document).ready(function(){
     //apply coupon
     $('.applycoupon').click(function(){
         if($('.promoaction').is(':checked')){
+            $('.coupon_saved').show()
+            $('.coupon_saved').html(`coupon code applyed and <br> you saved RS ${discountAmount}`)
             finalselectedPromocode = selectedPromocode
             finaldiscountAmount = discountAmount
             $(`#appliedCoupon`).text("Applied");

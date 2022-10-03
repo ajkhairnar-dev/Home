@@ -14,23 +14,39 @@ class BookingController extends Controller
         return view('cablist');
     }
 
-    public function customerregistration(Request $request){
+    public function logout(Request $request){
+        $request->session()->flush();
+        return redirect()->route('home');
 
+
+    }
+    public function customerregistration(Request $request){
         $reqBody = $request->all();
         //  = DB::table('customer')->where('mobile',$request->query('mobile'))->first();
 
-        $data= DB::select("select * from customer where mobile = '".$reqBody['mobile']."'");
+        $data= DB::select("select id,email,mobile,name,cabishpoints from customer where mobile = '".$reqBody['mobile']."'");
 
         if(count($data) > 0){
-            // return $request->all()
+            
+            $isLogindata = array(
+                'id' => $data[0]->id,
+                'name' => isset($data[0]->name) ? $data[0]->name  : 'Guest',
+                'mobile'=> $data[0]->mobile,
+                'email' => $data[0]->email,
+                'cabishpoint' => $data[0]->cabishpoints
+            );
+            session()->put('isLogin',$isLogindata);
+            // session()->forget('isLogin');
+            // $request->session()->flush();
             return response()->json([
-                'message' => "Product saved successfully!",
-                'product' => $data
+                'status' => true,
+                'message' => "Login Successfully !"
             ], 200);
         }else{
             return response()->json([
-                'message' => "Product saved successfully!"
-            ], 200);
+                'status' => false,
+                'message' => "Something wends wrong !"
+            ], 400);
         }
         
     
@@ -80,8 +96,6 @@ class BookingController extends Controller
         $tripmeta['triptype'] = $request->query('triptype');
         $tripmeta['ddate'] = $request->query('ddate');
         $tripmeta['dtime'] = $request->query('dtime');
-
-        
 
         switch ($trip) {
         case "ONEWAY":

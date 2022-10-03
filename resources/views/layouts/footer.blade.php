@@ -253,22 +253,6 @@
 
 <script type="text/javascript">
 
-var tk = {!! json_encode(csrf_token()) !!}
-$.ajax({    
-            type:'POST',  
-            url:"http://127.0.0.1:8000/customer-registration",
-            data: { _token:tk, mobile:"7028156545"}, 
-            success: function (data, status, xhr) {
-              console.log(data)
-            },
-            error: function (jqXhr, textStatus, errorMessage) {
-                console.log("SDfffffffffffffffffffffffffffffffffff")
-            }
-});
-
-
-
-
 
 $(document).ready(function() {
     
@@ -436,13 +420,21 @@ jQuery(function($){
                     var user=result.user;
                     $(".showerralert").hide();
                     isOtpSent = false;
-                    
-
-
-
-
-
+                
+                    var tk = {!! json_encode(csrf_token()) !!}
+                    $.ajax({    
+                                type:'POST',  
+                                url:"http://127.0.0.1:8000/customer-registration",
+                                data: { _token:tk, mobile:number}, 
+                                success: function (data, status, xhr) {
+                                    location.reload();
+                                },
+                                error: function (jqXhr, textStatus, errorMessage) {
+                                    console.log("SDfffffffffffffffffffffffffffffffffff")
+                                }
+                    });
                 }).catch(function (error) {
+                    $(".showalert").hide();
                     $(".showerralert").show();
                 });
 
