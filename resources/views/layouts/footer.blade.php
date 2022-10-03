@@ -368,7 +368,7 @@ jQuery(function($){
         if (isrecapchaVerify) {
             var ActualMobileNumber;
             var tempMobileNumber = "+91"+$("#mobilenumber").val();
-           
+            var mobile = $("#mobilenumber").val()
             $(".recaptchError").hide();
             $("#recaptcha-container").hide();
 
@@ -425,7 +425,7 @@ jQuery(function($){
                     $.ajax({    
                                 type:'POST',  
                                 url:"http://127.0.0.1:8000/customer-registration",
-                                data: { _token:tk, mobile:number}, 
+                                data: { _token:tk, mobile:mobile}, 
                                 success: function (data, status, xhr) {
                                     location.reload();
                                 },
