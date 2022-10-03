@@ -3,5 +3,6 @@
 </div>
 
 {{dd($data);}}
+{{dd(session()->get('bookingdetail'))}}
 
 <a href="{{route('paytm.purchase')}}">Check the demo again</a>

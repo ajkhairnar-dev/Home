@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use DB;
 use PDF;
-
+use App\Models\Bookings;
 class BookingController extends Controller
 {
     public function index(Request $request) {
@@ -48,9 +48,9 @@ class BookingController extends Controller
                 'message' => "Something wends wrong !"
             ], 400);
         }
-        
-    
     }
+
+    
         //cabish point
     public function cabishpoint(Request $request){
 
@@ -65,10 +65,26 @@ class BookingController extends Controller
     
     
     
-        //payment status
-    public function paymentstatus(Request $request){
+    //payment status
+    public function paymentstatus(){
+        // session()->put('isLogin',$isLogindata);
+       
+        dd(session()->get('isLogin'));
+        dd(session()->get('bookingdetail'));
+        $booking['booking_id'] = $this->generateUniqueCode();
+        $booking['booking_id'] = $this->generateUniqueCode();
         return view('paymentstatus');
     }
+
+    public function generateUniqueCode()
+    {
+        do {
+            $code = "GO".random_int(100000, 999999);
+        } while (Bookings::where("booking_id", "=", $code)->first());
+        return $code;
+    }
+
+
 
     public function invoicedownload(Request $request){
         // $data = [];

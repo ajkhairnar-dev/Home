@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use PaytmWallet;
-
+use App\Http\Controllers\BookingController;
 class PaytmController extends Controller
 {
     /**
@@ -15,7 +15,7 @@ class PaytmController extends Controller
     public function paytmPayment(Request $request)
     {
         
-      
+        session()->put('bookingdetail',$request->all());
         $payment = PaytmWallet::with('receive');
         $payment->prepare([
           'order' => rand(),
@@ -43,7 +43,10 @@ class PaytmController extends Controller
 
         if($transaction->isSuccessful()){
           //Transaction Successful
-          return view('paytm.paytm-success-page',['data'=>$response]);
+          $data = session()->get('bookingdetail');
+          $data['transaction']= $response;
+          session()->put('bookingdetail',$data);
+          return redirect()->action([BookingController::class, 'paymentstatus']);
         }else if($transaction->isFailed()){
           //Transaction Failed
           return view('paytm.paytm-fail');

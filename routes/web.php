@@ -65,8 +65,8 @@ Route::get('/blogs/{slug}', [App\Http\Controllers\PagesController::class, 'singl
 Route::get('/offers', [App\Http\Controllers\PagesController::class, 'offers'])->name('offers');
 Route::get('/offers/{slug}', [App\Http\Controllers\PagesController::class, 'single_offer'])->name('single_offer');
 Route::post('/cabishpoint', [App\Http\Controllers\BookingController::class, 'cabishpoint']);
-Route::post('/paymentstatus', [App\Http\Controllers\BookingController::class, 'paymentstatus']);
-Route::get('/invoice', [App\Http\Controllers\BookingController::class, 'invoicedownload']);
+Route::get('/paymentstatus', [App\Http\Controllers\BookingController::class, 'paymentstatus']);
+Route::get('/invoice', [paymentstatuspaymentstatus::class, 'invoicedownload']);
 Route::post('/customer-registration', [App\Http\Controllers\BookingController::class, 'customerregistration']);
 Route::get('/logout', [App\Http\Controllers\BookingController::class, 'logout']);
 

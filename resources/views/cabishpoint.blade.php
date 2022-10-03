@@ -84,7 +84,6 @@
         jQuery(function($){
             $("#paynow").click(function(){
                 var obj = {!! json_encode($data) !!}
-                console.log(obj)
                 var url = {!! json_encode(url('paytm-payment')) !!}
                 if($('#cabpoints').is(':checked')){
                     obj.payment.amount = Number(obj.payment.amount) - Number(obj.payment.ptsrupees)
