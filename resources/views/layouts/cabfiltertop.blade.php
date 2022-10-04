@@ -20,7 +20,14 @@
                     <div class="search-box">
                         <div class="form-group">
                             <label>Trip type</label>
-                            <input type="text" class="form-control open-select" placeholder="to">
+                            @php 
+
+                                
+
+                            @endphp 
+
+                            
+                            <input type="text" class="form-control open-select" placeholder="to" value="{{session()->get('searchfilter')['triptype']}}">
 
                             <div class="selector-box-flight">
 
@@ -55,7 +62,7 @@
                                 <div class="form-flex">
                                     <div class="search-body">
                                         <h6>PICKUP LOCATION</h6>
-                                        <input type="text" value="" class="form-control open-select" id="search_input" placeholder="pick up">
+                                        <input type="text"  class="form-control open-select" id="search_input" placeholder="pick up" value="">
                                     </div>
                                     <div id="droplocation" class="search-body">
                                         <h6>DROP LOCATION</h6>

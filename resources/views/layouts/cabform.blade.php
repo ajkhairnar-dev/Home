@@ -1,7 +1,7 @@
     <!-- section start -->
     <section class="home_section p-0">
         <div class="home home-padding">
-            <img src="assets/images/flights/banner.jpg" class="bg-img img-fluid" alt="">
+            <img src="{{asset('images/flights/banner.jpg')}}" class="bg-img img-fluid" alt="">
             <div class="animation-bg">
                 <div class="container custom-container mix-layout-section">
                     <div class="row">
@@ -70,11 +70,11 @@
                                                                 <input type="hidden" name="triptype" value="ONEWAY">
                                                                 <div class="search-body">
                                                                     <h6>PICKUP LOCATION</h6>
-                                                                    <input type="text" required="required" value="" name="pickup" class="form-control open-select" id="search_input" placeholder="pick up">
+                                                                    <input type="text" required="required" value="" name="pickup" class="form-control open-select" id="ac1" placeholder="pick up">
                                                                 </div>
                                                                 <div id="droplocation" class="search-body">
                                                                     <h6>DROP LOCATION</h6>
-                                                                    <input type="text" required="required" value="" name="drop" class="form-control open-select" placeholder="drop off">
+                                                                    <input type="text" required="required" value="" name="drop" class="form-control open-select" id="ac2" placeholder="drop off">
                                                                 </div>
                                                                 <div class="search-body">
                                                                     <h6>DEPATURE</h6>
@@ -101,7 +101,7 @@
                                                                 <input type="hidden" name="triptype" value="LOCALTRIP">
                                                                 <div class="search-body">
                                                                     <h6>PICKUP LOCATION</h6>
-                                                                    <input type="text" value="" required="required" name="pickup" class="form-control open-select" id="exampleInputEmail1" placeholder="pick up">
+                                                                    <input type="text" value="" required="required" name="pickup" class="form-control open-select" id="ac3" placeholder="pick up">
                                                                 </div>
                                                                 <div class="search-body">
                                                                     <h6>DEPATURE</h6>
@@ -139,11 +139,11 @@
                                                                  <input type="hidden" name="triptype" value="ROUNDTRIP">
                                                                 <div class="search-body">
                                                                     <h6>From</h6>
-                                                                    <input type="text" required="required" name="pickup" class="form-control open-select" id="exampleInputEmail1" placeholder="pick up">
+                                                                    <input type="text" required="required" name="pickup" class="form-control open-select" id="ac4" placeholder="pick up">
                                                                 </div>
                                                                 <div class="search-body">
                                                                     <h6>To</h6>
-                                                                    <input type="text" required="required" name="drop" class="form-control open-select" placeholder="drop off">
+                                                                    <input type="text" required="required" name="drop" class="form-control open-select" id="ac5" placeholder="drop off">
                                                                 </div>
                                                                 <div class="search-body">
                                                                     <h6>Date</h6>
@@ -155,7 +155,7 @@
                                                                 </div>
                                                                 <div class="search-body">
                                                                     <h6>Return</h6>
-                                                                    <input placeholder="Drop Off Date" required="required" inputmode='none' name="rdate" class="datetimepicker" />
+                                                                    <input placeholder="Drop Off Date" required="required" inputmode='none' name="rdate" class="datetimepicker123" />
                                                                 </div>
                                                                 <div id="extracity"></div>
                                                                 <div class="search-body btn-search">
@@ -167,7 +167,7 @@
                                                                 </div>
                                                                 <div class="search-body btn-search">
                                                                     <div class="right-part">
-                                                                        <button type="submit" class="btn btn-solid color1 rounded5">search</button>
+                                                                        <button href="#" class="btn btn-solid color1 rounded5">search</button>
                                                                     </div>
                                                                 </div>
                                                                 </form>
@@ -178,71 +178,93 @@
                                                         <!--airport--->
 
                                                         <div class="left-part " id="airport" style="display:none;">
-                                                            <div class="form-flex">
-                                                                <div id="airportpickup">
-                                                                    <div class="search-body">
-                                                                        <h6>PICKUP AIRPORT</h6>
-                                                                        <input type="text"  value="" class="form-control open-select" id="exampleInputEmail1" placeholder="pick up">
-                                                                    </div>
-                                                                    <div id="droplocation" class="search-body">
-                                                                        <h6>DROP LOCATION</h6>
-                                                                        <input type="text" value="" class="form-control open-select" placeholder="drop off">
-                                                                    </div>
-                                                                    <div class="search-body">
-                                                                        <h6>DEPATURE</h6>
-                                                                        <input placeholder="pickup date & time" value="02:05 11/13/2019" class="datetimepicker" />
-                                                                    </div>
-                                                                    <div class="search-body btn-search">
-                                                                        <div class="right-part">
-                                                                            <a href="cablist.php" class="btn btn-solid color1 rounded5">search</a>
+                                                            <div id="airportpickup">
+                                                                <div class="form-flex">
+                                                                    <form action="{{route('search')}}" method="get" autocomplete="off">
+                                                                        <input type="hidden" name="triptype" value="AIRPICK">
+                                                                        <div class="search-body">
+                                                                            <h6>SELECT AIRPORT</h6>
+                                                                            <input type="text" required="required" value="" name="pickup" class="form-control open-select-airport" id="ac1" placeholder="pick up">
                                                                         </div>
-                                                                    </div>
+                                                                        <div id="droplocation" class="search-body">
+                                                                            <h6>DROP LOCATION</h6>
+                                                                            <input type="text" required="required" value="" name="drop" class="form-control open-select" id="ac2" placeholder="drop off">
+                                                                        </div>
+                                                                        <div class="search-body">
+                                                                            <h6>DEPATURE</h6>
+                                                                            <input placeholder="Select Date" required="required" inputmode='none' name="ddate" value="" class="datetimepicker" />
+                                                                        </div>
+                                                                        <div class="search-body">
+                                                                            <h6>Time</h6>
+                                                                            <input placeholder="Select Time" required="required" inputmode='none' name="dtime" value="" class="form-control timepicker" />
+                                                                        </div>
+                                                                        <div class="search-body btn-search">
+                                                                            <div class="right-part">
+                                                                                <button type="submit" class="btn btn-solid color1 rounded5">search</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </form>
                                                                 </div>
                                                             </div>
+                                            
 
 
                                                             <div id="airportdrop" style="display:none;">
                                                                 <div class="form-flex">
-                                                                    <div class="search-body">
-                                                                        <h6>DROP AIRPORT</h6>
-                                                                        <input type="text" value="" class="form-control open-select" id="exampleInputEmail1" placeholder="pick up">
-                                                                    </div>
-                                                                    <div class="search-body">
-                                                                        <h6>PIKCUP LOCATION</h6>
-                                                                        <input type="text" value="" class="form-control open-select" placeholder="drop off">
-                                                                    </div>
-                                                                    <div class="search-body">
-                                                                        <h6>DEPATURE</h6>
-                                                                        <input placeholder="pickup date & time" value="02:05 11/13/2019" class="datetimepicker" />
-                                                                    </div>
-                                                                    <div class="search-body btn-search">
-                                                                        <div class="right-part">
-                                                                            <a href="cablist.php" class="btn btn-solid color1 rounded5">search</a>
+                                                                    <form action="{{route('search')}}" method="get" autocomplete="off">
+                                                                        <input type="hidden" name="triptype" value="AIRDROP">
+                                                                        <div class="search-body">
+                                                                            <h6>PICKUP LOCATION</h6>
+                                                                            <input type="text" required="required" value="" name="pickup" class="form-control open-select" id="ac1" placeholder="pick up">
                                                                         </div>
-                                                                    </div>
+                                                                        <div id="droplocation" class="search-body">
+                                                                            <h6>DROP AIRPORT</h6>
+                                                                            <input type="text" required="required" value="" name="drop" class="form-control open-select-airport" id="ac2" placeholder="drop off">
+                                                                        </div>
+                                                                        <div class="search-body">
+                                                                            <h6>DEPATURE</h6>
+                                                                            <input placeholder="Select Date" required="required" inputmode='none' name="ddate" value="" class="datetimepicker" />
+                                                                        </div>
+                                                                        <div class="search-body">
+                                                                            <h6>Time</h6>
+                                                                            <input placeholder="Select Time" required="required" inputmode='none' name="dtime" value="" class="form-control timepicker" />
+                                                                        </div>
+                                                                        <div class="search-body btn-search">
+                                                                            <div class="right-part">
+                                                                                <button type="submit" class="btn btn-solid color1 rounded5">search</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </form>
                                                                 </div>
                                                             </div>
 
 
                                                             <div id="airportreturn" style="display:none;">
                                                                 <div class="form-flex">
+                                                                    <form action="{{route('search')}}" method="get">
+                                                                    <input type="hidden" name="triptype" value="AIRRETURN">
                                                                     <div class="search-body">
                                                                         <h6>AIPROT</h6>
-                                                                        <input type="text" value="" class="form-control open-select" placeholder="Select Airport">
+                                                                        <input type="text" value="" name="airport" class="form-control open-select-airport" placeholder="Select Airport">
                                                                     </div>
                                                                     <div class="search-body">
                                                                         <h6>PICKUP LOCATION</h6>
-                                                                        <input type="text" value="" class="form-control open-select" id="exampleInputEmail1" placeholder="Pickup Location">
+                                                                        <input type="text" value="" name="pickup" class="form-control open-select" id="exampleInputEmail1" placeholder="Pickup Location">
                                                                     </div>
                                                                     <div class="search-body">
                                                                         <h6>DEPATURE</h6>
-                                                                        <input placeholder="pickup date & time" value="02:05 11/13/2019" class="datetimepicker" />
+                                                                        <input placeholder="pickup date" inputmode='none' name="ddate" value="02:05 11/13/2019" class="datetimepicker" />
+                                                                    </div>
+                                                                    <div class="search-body">
+                                                                        <h6>TIME</h6>
+                                                                        <input placeholder="pickup time" inputmode='none' name="dtime" value="" class="timepicker" />
                                                                     </div>
                                                                     <div class="search-body btn-search">
                                                                         <div class="right-part">
-                                                                            <a href="cablist.php" class="btn btn-solid color1 rounded5">search</a>
+                                                                            <button type="submit" class="btn btn-solid color1 rounded5">search</button>
                                                                         </div>
                                                                     </div>
+                                                                    </form>
                                                                 </div>
                                                             </div>
 

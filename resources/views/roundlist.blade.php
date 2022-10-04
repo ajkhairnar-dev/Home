@@ -173,7 +173,14 @@
                                                                         <input type="hidden" value="{{$price}}" name="price">
                                                                         <input type="hidden" value="{{$tripmeta['ddate']}}" name="ddate">
                                                                         <input type="hidden" value="{{$tripmeta['drop']}}" name="drop">
-                                                                        <button class="select-btn btn btn-solid color1 rounded-3" type="submit">select</button>
+
+                                                                        @if(session()->has('isLogin'))
+                                                                            <button class="select-btn btn btn-solid color1 rounded-3" type="submit">select</button>
+                                                                        @else
+                                                                            <a  data-bs-toggle="modal" data-bs-target="#registration_popUp"  class="select-btn btn btn-solid color1 rounded-3">select</a>
+                                                                        @endif
+                                                                        
+                                                                        
                                                                     </form>
 
                                                                 </div>

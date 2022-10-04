@@ -85,6 +85,7 @@ class BookingController extends Controller
 
         $customer = session()->get('isLogin');
         $bd= session()->get('bookingdetail');
+
         $point = 0;
         //------------- cabish point --------- 
         //debit cabish point
@@ -126,6 +127,8 @@ class BookingController extends Controller
         $booking['vehicle_types'] = $bd['vehicles']['id'];
         $booking['pick_location'] = $tripmeta['pickup'];
         $booking['drop_location'] = $tripmeta['drop'];
+        $booking['airport'] = $tripmeta['airport'];
+
         
         $bd['booking_id'] = $booking['booking_id'];
         //booking details 
@@ -141,10 +144,17 @@ class BookingController extends Controller
         $bookingdetails['date'] = $tripmeta['ddate'];
         $bookingdetails['time'] = $tripmeta['dtime'];
         $bookingdetails['rdate'] = $tripmeta['rdate'];
+        $bookingdetails['hrs'] = $bd['hrs'];
+
 
         //transaction
+        if($bd['payment']['paytype'] == "partialpayment"){
+            $paytype = 0;
+        }else{
+            $paytype = 1;
+        }
         $transaction['booking_id'] = $booking['booking_id'];
-        $transaction['type'] = $bd['triptype']['id'];
+        $transaction['type'] = $paytype;
         $transaction['final_amt'] = (int)$bd['payment']['amount'];
         $transaction['balance'] = (int)$bd['payment']['remaining'];
         $transaction['mid'] = $bd['transaction']['MID'];
@@ -186,12 +196,12 @@ class BookingController extends Controller
 
 
     public function invoicedownload(Request $request){
-        // $data = [];
+        $data = [];
         // // echo url('/images/invoice/bg-img.jpg');
         // view()->share('employee',$data);
         // $pdf =  PDF::setOptions(['isHtml5ParserEnabled' => true,'isPhpEnabled' => true])->loadView('invoice', $data);
 
-        // // download PDF file with download method
+        // // // download PDF file with download method
         // return $pdf->download('pdf_file.pdf');
 
         return view('invoice');
@@ -204,14 +214,31 @@ class BookingController extends Controller
 
 
     public function search(Request $request) {
+
+        session()->put('searchfilter', $request->all());
+
         $trip = $request->query('triptype');
         $tripmeta['pickup'] = $request->query('pickup');
-        if($request->query('triptype') == 'LOCALTRIP') {$tripmeta['drop'] = $request->query('pickup'); }
-        else {$tripmeta['drop'] = $request->query('drop'); }
+        $tripmeta['airport'] = "";
+        if($request->query('triptype') == 'LOCALTRIP') 
+        {
+            $tripmeta['drop'] = $request->query('pickup');
+         }else if($request->query('triptype') == 'AIRRETURN'){
+            $tripmeta['drop'] = $request->query('pickup'); 
+            $tripmeta['airport'] = $request->query('airport'); 
+         }else {
+            $tripmeta['drop'] = $request->query('drop'); 
+        }
         $tripmeta['triptype'] = $request->query('triptype');
         $tripmeta['ddate'] = $request->query('ddate');
         $tripmeta['dtime'] = $request->query('dtime');
         $tripmeta['rdate'] = ($request->has('rdate')) ? $request->query('rdate') : "" ;
+
+        if($request->query('triptype') == "LOCALTRIP"){
+
+            $tripmeta['distance'] = (int)$request->query('pack_type') * 10;
+            $tripmeta['hrs'] = (int)$request->query('pack_type') ;
+        }
         
         session()->put('searchdata', $tripmeta);
 
@@ -248,31 +275,56 @@ class BookingController extends Controller
                 return view('cablist',['data' => $data,'tripmeta'=>$tripmeta]);
                 break;
          case "AIRDROP":
+                // dd($request->all());
                 $data = airdrop($request);
                 if($data==false) {
                 return view('noservice');
                 }
                 return view('cablist',['data' => $data,'tripmeta'=>$tripmeta]);
                 break;
-        default:
+        case "AIRRETURN":
+
+                $data = airdrop($request);
+                if($data==false) {
+                return view('noservice');
+                }
+                return view('airreturnlist',['data' => $data,'tripmeta'=>$tripmeta]);
+                break;
+                default:
             echo "Your favorite color is neither red, blue, nor green!";
         }
     }
 
 
     public function booking(Request $request) {
-        
+
         // dd($request->all());
+
+        $abandonedbooking['customer_number'] = session()->get('isLogin')['mobile'];
+        $abandonedbooking['trip_type'] = $request['triptype'];
+        $abandonedbooking['pickup_location'] = $request['pickup'];
+        $abandonedbooking['drop_location'] = $request['drop'];
+        $abandonedbooking['date'] = $request['ddate'];
+
+        DB::table('abandonedbooking')->insert($abandonedbooking);
+
+        $hrs = 0;
         if($request['triptype'] == "ROUNDTRIP"){
             $distance = $request['distance'];
+        }else if($request['triptype'] == "LOCALTRIP"){ 
+            $distance = $request['distance'];
+            $hrs = $request['hrs'];
+        }else if($request['triptype'] == "AIRRETURN"){
+            $distance = getDistance($request->pickup, $request->airport, "K");
+            $distance = $distance * 2;
         }else{
             $distance = getDistance($request->pickup, $request->drop, "K");
         }
-    
+
         $vdata = DB::table('vehicle_types')->where('type',$request->vehicletype)->first();
         $triptype = DB::table('trip_types')->where('code',$request->triptype)->first();
         $sitesetting = DB::table('site_settings')->first();
-        return view('booking',['data' => $request, 'distance'=>$distance,'vdata'=>$vdata, 'triptype'=>$triptype, 'sitesetting'=>$sitesetting]);
+        return view('booking',['data' => $request, 'distance'=>$distance,'vdata'=>$vdata, 'triptype'=>$triptype, 'sitesetting'=>$sitesetting, 'hrs'=>$hrs]);
     }
 
 
@@ -354,10 +406,14 @@ function airpick($request) {
 }
 
 function airdrop($request) {
-
+    // dd($request->all());
     $trip = $request->query('triptype');
     $pickup = $request->query('pickup');
     $drop = $request->query('drop');
+    
+    if($request->query('triptype') == "AIRRETURN"){
+        $drop = $request['airport'];
+    }
 
     $lpack = DB::table('airport_packages')
     ->select('id')
@@ -365,6 +421,7 @@ function airdrop($request) {
     ->where('drop',$drop)
     ->first();
 
+    
     if(!empty($lpack)) {
         $resultdata = DB::select("SELECT lop.id , lop.pickup ,lop.`drop`, lop.kms,lor.rates , lor.after_rates,lor.discount ,lop.toll_tax,
                 vt.`type` as 'vehicletype', vt.title as 'vehicletitle', vt.image as 'vehicleimg', vt.seat, vt.ac, vt.ratings, vt.stars,tt.code , tt.inclusion , tt.exclusion , tt.additional_information

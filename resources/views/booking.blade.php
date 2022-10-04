@@ -104,20 +104,28 @@
                                                                     <!-- <h5><span class="ti-location-pin"></span>Nashik</h5>
                                                                     <span class="route_line"></span>
                                                                     <h5><span class="ti-target"></span>Mumbai</h5> -->
-                                                                    @php 
+
+                                                                    <ul class="route-row">
+                                                                        <li>
+                                                                            <span class="ti-location-pin"></span>{{explode(',', $data['pickup'])[0]}}
+                                                                        </li>
+                                                                        <li class="route_line">
+                                                                        </li>
+                                                                        
+
+                                                                    @if($data['triptype']=='AIRRETURN')
+                                                                        <li><span class="ti-target"></span>{{explode(',', $data['airport'])[0]}}</li>
+                                                                    @endif
+
+                                                                    <!-- @php 
+                                                                    
                                                                         $pickup = explode(',', $data['pickup'] );
                                                                         $pickup = $pickup[0];
 
                                                                         $drop = explode(',', $data['drop'] );
                                                                         $drop = $drop[0];
-                                                                    @endphp 
-                                                                    <ul class="route-row">
-                                                                        <li>
-                                                                            <span class="ti-location-pin"></span>{{$pickup}}
-                                                                        </li>
-                                                                        <li class="route_line">
-                                                                        </li>
-                                                                        <li><span class="ti-target"></span>{{$drop}}</li>
+                                                                    @endphp  -->
+                                                                        <li><span class="ti-location-pin"></span>{{explode(',', $data['drop'])[0]}}</li>
                                                                         <li><span class="ti-calendar"></span>{{$data['ddate']}}</li>
                                                                     </ul>
                                                                 </div>
@@ -757,10 +765,12 @@ jQuery(function($){
         },
         vehicles:{!! json_encode($vdata) !!},
         distance:{!! json_encode($distance) !!},
+        hrs : {!! json_encode($hrs) !!},
         triptype:{!! json_encode($triptype) !!},
         sitesetting : {!! json_encode($sitesetting) !!}
       }
 
+      console.log(object);
    
       var url = {!! json_encode(url('cabishpoint')) !!}
       $.redirect(url, object, "POST");

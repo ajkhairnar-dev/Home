@@ -35,7 +35,7 @@
                                             href="#dashboard">dashboard</a></li> -->
                                     <li class="nav-item"><a  class="nav-link active" href="{{route('account')}}">profile</a></li>
                                     <li class="nav-item"><a  class="nav-link" href="{{route('earnings')}}">cabish points</a></li>
-                                    <li class="nav-item"><a  class="nav-link" href="{{mybookings}}">bookings</a></li>
+                                    <li class="nav-item"><a  class="nav-link" href="">bookings</a></li>
                                 </ul>
                             </div>
                         </div>

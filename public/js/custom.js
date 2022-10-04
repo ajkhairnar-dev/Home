@@ -181,13 +181,18 @@ initialize();
         modal: true,
         footer: true
     });
+
     $('.datetimepicker').datepicker(
         {
         uiLibrary: 'bootstrap4',
         modal: true,
         footer: true
-    }
-        );
+    });
+     $('.datetimepickers').datepicker( {
+        uiLibrary: 'bootstrap4',
+        modal: true,
+        footer: true
+    });
         
         
     $('#departure').datepicker({

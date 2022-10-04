@@ -17,7 +17,7 @@ class HomeController extends Controller
     
     public function __construct()
     {
-        $this->middleware('auth');
+       // $this->middleware('auth');
     }
 
     /**
@@ -27,17 +27,13 @@ class HomeController extends Controller
      */
     public function index() {
         
-    //     if (Auth::check()) {
-    // // The user is logged in...
-    //     }
-        
-        $id = Auth::user()->id;
-        $user = User::find($id);
-        return view('users.my-profile',compact('user'));
+       
+        return view('users.my-profile');
     }
     
     
     public function trips() {
+      
         return view('users.my-trips');
     }
     

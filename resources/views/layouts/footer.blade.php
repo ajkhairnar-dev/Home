@@ -204,6 +204,12 @@
         modal: true,
         footer: true
     });
+    $('.datetimepicker123').datepicker({
+        minDate:new Date(),
+        uiLibrary: 'bootstrap4',
+        modal: true,
+        footer: true
+    });
     $('#departure').datepicker({
         uiLibrary: 'bootstrap4'
     });
@@ -253,6 +259,15 @@
 
 <script type="text/javascript">
 
+$(document).ready(function() {
+            $("input").on("focusin", function() {
+                $(".review__booking").css("position", "static");
+            });
+
+            $("input").on("focusout", function() {
+                $(".review__booking").css("position", "sticky");
+            })
+        })
 
 $(document).ready(function() {
     
@@ -269,14 +284,37 @@ $(document).ready(function() {
     initialize();
   });
 /*google map code*/
-function initialize() {
-    console.log('function initi');
+// function initialize() {
+//     console.log('function initi');
 
+//     var acInputs = document.getElementsByClassName("open-select");
+//     for (var i = 0; i < acInputs.length; i++) {
+//         var autocomplete;
+//         autocomplete = new google.maps.places.Autocomplete((acInputs[i]), {
+//             types: ['geocode'],
+//             componentRestrictions: {
+//                 country: "IN"
+//             }
+//         });
+//         autocomplete.inputId = acInputs[i].id;
+//     }
+    
+//     google.maps.event.addListener(autocomplete, 'place_changed', function() {
+//             var near_place = autocomplete.getPlace();
+//     });
+// }
+// initialize();
+
+
+
+
+/*google map code*/
+function initialize() {
     var acInputs = document.getElementsByClassName("open-select");
     for (var i = 0; i < acInputs.length; i++) {
         var autocomplete;
         autocomplete = new google.maps.places.Autocomplete((acInputs[i]), {
-            types: ['geocode'],
+            types: ['(cities)'],
             componentRestrictions: {
                 country: "IN"
             }
@@ -287,8 +325,36 @@ function initialize() {
     google.maps.event.addListener(autocomplete, 'place_changed', function() {
             var near_place = autocomplete.getPlace();
     });
+
+    var airinput = document.getElementsByClassName("open-select-airport");
+    for (var j = 0; j < airinput.length; j++) {
+        var autocompleteair;
+        autocompleteair = new google.maps.places.Autocomplete((airinput[j]), {
+            types: ['airport'],
+            componentRestrictions: {
+                country: "IN"
+            }
+        });
+        autocompleteair.inputId = airinput[j].id;
+    }
+    
+    google.maps.event.addListener(autocompleteair, 'place_changed', function() {
+            var near_place = autocompleteair.getPlace();
+    });
 }
+
 initialize();
+
+
+
+
+
+
+
+
+
+
+
 
 $.fancyMessenger({
             onSend: function(obj) {
@@ -425,7 +491,7 @@ jQuery(function($){
                     var tk = {!! json_encode(csrf_token()) !!}
                     $.ajax({    
                                 type:'POST',  
-                                url:"http://127.0.0.1:8000/customer-registration",
+                                url:"/customer-registration",
                                 data: { _token:tk, mobile:mobile }, 
                                 success: function (data, status, xhr) {
                                     location.reload();
