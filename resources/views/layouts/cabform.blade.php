@@ -143,11 +143,11 @@
                                                                 </div>
                                                                 <div class="search-body">
                                                                     <h6>To</h6>
-                                                                    <input type="text" required="required" class="form-control open-select" placeholder="drop off">
+                                                                    <input type="text" required="required" name="drop" class="form-control open-select" placeholder="drop off">
                                                                 </div>
                                                                 <div class="search-body">
                                                                     <h6>Date</h6>
-                                                                    <input placeholder="Pickup Date" required="required" inputmode='none' name="pickuptime" value="1" class="datetimepicker" />
+                                                                    <input placeholder="Pickup Date" required="required" inputmode='none' name="ddate" value="1" class="datetimepicker" />
                                                                 </div>
                                                                 <div class="search-body">
                                                                     <h6>Time</h6>
@@ -155,7 +155,7 @@
                                                                 </div>
                                                                 <div class="search-body">
                                                                     <h6>Return</h6>
-                                                                    <input placeholder="Drop Off Date" required="required" inputmode='none' name="returntime" class="datetimepicker" />
+                                                                    <input placeholder="Drop Off Date" required="required" inputmode='none' name="rdate" class="datetimepicker" />
                                                                 </div>
                                                                 <div id="extracity"></div>
                                                                 <div class="search-body btn-search">
@@ -167,7 +167,7 @@
                                                                 </div>
                                                                 <div class="search-body btn-search">
                                                                     <div class="right-part">
-                                                                        <a href="#" class="btn btn-solid color1 rounded5">search</a>
+                                                                        <button type="submit" class="btn btn-solid color1 rounded5">search</button>
                                                                     </div>
                                                                 </div>
                                                                 </form>

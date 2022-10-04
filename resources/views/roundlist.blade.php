@@ -13,7 +13,7 @@
     @include('layouts.cabfilter')
 
 
-
+                    <div class="col-lg-9">
                     <section class="category-wrapper rounded-1 pt-0 ">
                         <!-- cab  variation 1 card ================================ -->
                         <div class="row">
@@ -23,6 +23,13 @@
                             @php
                                 $kms = $data[1];
                                 $price = round(($kms*$c->rates)+(($kms*$c->rates)*0.05)+$data[2]);
+
+                                
+                                $dd = ($c->discount)/100;
+                                $discount = round($price + ($price*$dd));
+                                $points = $discount*0.05;
+                                if($points>150){$points = 150;}
+                                                               
                             @endphp
 
                             <div class="col-md-12">
@@ -129,7 +136,7 @@
                                                                         </p>
                                                                     </div>
                                                                     <div class="row">
-                                                                        <p><img src="{{asset('images/icon/includekms.png')}}"/> {{$c->kms}} kms included. After that ₹{{$c->after_rates}}/km</p>
+                                                                        <p><img src="{{asset('images/icon/includekms.png')}}"/> {{$kms}} kms included. After that ₹{{$c->after_rates}}/km</p>
                                                                     </div>
                                                                     <div class="row">
                                                                         <p><img src="{{asset('images/icon/freecancellation.png')}}"> Free cancellation until 6 hours before pickup</p>
@@ -145,24 +152,27 @@
                                                                         </p>
                                                                     </div> -->
                                                                 </div>
-
+                                                                
 
                                                                 <div class="price_box col-md-3 md_left  d-flex justify-content-between align-items-center flex-column">
 
                                                                     <div class="discount_offer-badge">
-                                                                      
+                                                                    {{$c->discount}}%
                                                                     </div>
                                                                     
                                                                     <h6 class="fw-bolder">
-                                                                        <span class="cross-price">₹100</span> ₹{{$price}}
+                                                                    <span class="cross-price">₹{{$discount}}</span> ₹{{$price}}
                                                                     <form action="/booking" method="post">
                                                                          @csrf
+                                                                        <input type="hidden" value="{{$kms}}" name="distance">
+                                                                        <input type="hidden" value="{{$tripmeta['rdate']}}" name="rdate">
                                                                         <input type="hidden" value="{{$c->vehicletype}}" name="vehicletype">
                                                                         <input type="hidden" value="{{$c->pickup}}" name="pickup">
                                                                         <input type="hidden" value="{{$c->id}}" name="packcode">
                                                                         <input type="hidden" value="{{$tripmeta['triptype']}}" name="triptype">
                                                                         <input type="hidden" value="{{$price}}" name="price">
                                                                         <input type="hidden" value="{{$tripmeta['ddate']}}" name="ddate">
+                                                                        <input type="hidden" value="{{$tripmeta['drop']}}" name="drop">
                                                                         <button class="select-btn btn btn-solid color1 rounded-3" type="submit">select</button>
                                                                     </form>
 
@@ -182,7 +192,7 @@
                                                                 Payment
                                                             </div>
                                                             <div class="car-gocabishbadge">
-                                                                <span class="fw-bolder"> 0 </span>Gocabish Points
+                                                                <span class="fw-bolder"> {{$points}} </span>Gocabish Points
                                                             </div>
                                                         </div>
 
@@ -208,97 +218,8 @@
 
                                                                                             includings
                                                                                         </h3>
-                                                                                        <ul class="includings-ul">
-                                                                                            <li>
-                                                                                                <p> Includes GST (5%) in
-                                                                                                    the
-                                                                                                    costing.</p>
-
-                                                                                            </li>
-                                                                                            <li>
-                                                                                                <p>Includes Driver Day
-                                                                                                    allowance.
-                                                                                                </p>
-                                                                                            </li>
-                                                                                            <li>
-                                                                                                <p>Your Trip has a KM
-                                                                                                    limit
-                                                                                                    and
-                                                                                                    in case of certain
-                                                                                                    special
-                                                                                                    packages may even
-                                                                                                    contain
-                                                                                                    Hours limit. If your
-                                                                                                    usage
-                                                                                                    exceeds these
-                                                                                                    limits,
-                                                                                                    you
-                                                                                                    will be charged for
-                                                                                                    the
-                                                                                                    excess KM used
-                                                                                                    (and/or
-                                                                                                    hour
-                                                                                                    if applicable).
-                                                                                                </p>
-                                                                                            </li>
-                                                                                            <li>
-                                                                                                <p>All road toll fees,
-                                                                                                    parking
-                                                                                                    charges, state taxes
-                                                                                                    etc.
-                                                                                                    are charged extra
-                                                                                                    and
-                                                                                                    need
-                                                                                                    to be paid to the
-                                                                                                    concerned
-                                                                                                    authorities as per
-                                                                                                    actuals.
-                                                                                                </p>
-                                                                                            </li>
-                                                                                            <li>
-                                                                                                <p>For driving between
-                                                                                                    10:00
-                                                                                                    pm
-                                                                                                    to 6:00 am on any of
-                                                                                                    the
-                                                                                                    nights, an
-                                                                                                    additional
-                                                                                                    allowance will be
-                                                                                                    applicable
-                                                                                                    and is to be paid to
-                                                                                                    the
-                                                                                                    driver.
-                                                                                                </p>
-                                                                                            </li>
-                                                                                            <li>
-                                                                                                <p>Please ensure you
-                                                                                                    have
-                                                                                                    covered all cities
-                                                                                                    you
-                                                                                                    plan
-                                                                                                    to visit in your
-                                                                                                    itinerary.
-                                                                                                    This will help our
-                                                                                                    driver
-                                                                                                    prepare accordingly.
-                                                                                                    Adding
-                                                                                                    city to the
-                                                                                                    itinerary
-                                                                                                    during
-                                                                                                    trip may not be
-                                                                                                    possible.
-                                                                                                </p>
-                                                                                            </li>
-                                                                                            <li>
-                                                                                                <p>If your Trip has Hill
-                                                                                                    climbs,
-                                                                                                    cab AC may be
-                                                                                                    switched
-                                                                                                    off
-                                                                                                    during such climbs.
-                                                                                                </p>
-                                                                                            </li>
-                                                                                        </ul>
+                                                                                        {!! $c->inclusion !!}
+                                                                                        
                                                                                     </div>
 
                                                                                     <div class="col-md-6">
@@ -306,97 +227,7 @@
 
                                                                                             additional information
                                                                                         </h3>
-                                                                                        <ul class="additional__information-ul">
-                                                                                            <li>
-                                                                                                <p>Includes GST (5%) in
-                                                                                                    the
-                                                                                                    costing.
-                                                                                                </p>
-                                                                                            </li>
-                                                                                            <li>
-                                                                                                <p>Includes Driver Day
-                                                                                                    allowance.
-                                                                                                </p>
-                                                                                            </li>
-                                                                                            <li>
-                                                                                                <p>Your Trip has a KM
-                                                                                                    limit
-                                                                                                    and
-                                                                                                    in case of certain
-                                                                                                    special
-                                                                                                    packages may even
-                                                                                                    contain
-                                                                                                    Hours limit. If your
-                                                                                                    usage
-                                                                                                    exceeds these
-                                                                                                    limits,
-                                                                                                    you
-                                                                                                    will be charged for
-                                                                                                    the
-                                                                                                    excess KM used
-                                                                                                    (and/or
-                                                                                                    hour
-                                                                                                    if applicable).
-                                                                                                </p>
-                                                                                            </li>
-                                                                                            <li>
-                                                                                                <p>All road toll fees,
-                                                                                                    parking
-                                                                                                    charges, state taxes
-                                                                                                    etc.
-                                                                                                    are charged extra
-                                                                                                    and
-                                                                                                    need
-                                                                                                    to be paid to the
-                                                                                                    concerned
-                                                                                                    authorities as per
-                                                                                                    actuals.
-                                                                                                </p>
-                                                                                            </li>
-                                                                                            <li>
-                                                                                                <p>For driving between
-                                                                                                    10:00
-                                                                                                    pm
-                                                                                                    to 6:00 am on any of
-                                                                                                    the
-                                                                                                    nights, an
-                                                                                                    additional
-                                                                                                    allowance will be
-                                                                                                    applicable
-                                                                                                    and is to be paid to
-                                                                                                    the
-                                                                                                    driver.
-                                                                                                </p>
-                                                                                            </li>
-                                                                                            <li>
-                                                                                                <p>Please ensure you
-                                                                                                    have
-                                                                                                    covered all cities
-                                                                                                    you
-                                                                                                    plan
-                                                                                                    to visit in your
-                                                                                                    itinerary.
-                                                                                                    This will help our
-                                                                                                    driver
-                                                                                                    prepare accordingly.
-                                                                                                    Adding
-                                                                                                    city to the
-                                                                                                    itinerary
-                                                                                                    during
-                                                                                                    trip may not be
-                                                                                                    possible.
-                                                                                                </p>
-                                                                                            </li>
-                                                                                            <li>
-                                                                                                <p>If your Trip has Hill
-                                                                                                    climbs,
-                                                                                                    cab AC may be
-                                                                                                    switched
-                                                                                                    off
-                                                                                                    during such climbs.
-                                                                                                </p>
-                                                                                            </li>
-                                                                                        </ul>
+                                                                                        {!! $c->exclusion !!}
                                                                                     </div>
 
                                                                                     <div class="col-md-12 mt-3">
@@ -404,88 +235,9 @@
 
                                                                                             additional information
                                                                                         </h3>
-                                                                                        <ul>
+                                                                                        {!! $c->additional_information !!}
 
-
-                                                                                            <li>
-                                                                                                <p>Your Trip has a KM
-                                                                                                    limit
-                                                                                                    and
-                                                                                                    in case of certain
-                                                                                                    special
-                                                                                                    packages may even
-                                                                                                    contain
-                                                                                                    Hours limit. If your
-                                                                                                    usage
-                                                                                                    exceeds these
-                                                                                                    limits,
-                                                                                                    you
-                                                                                                    will be charged for
-                                                                                                    the
-                                                                                                    excess KM used
-                                                                                                    (and/or
-                                                                                                    hour
-                                                                                                    if applicable).
-                                                                                                </p>
-                                                                                            </li>
-                                                                                            <li>
-                                                                                                <p>All road toll fees,
-                                                                                                    parking
-                                                                                                    charges, state taxes
-                                                                                                    etc.
-                                                                                                    are charged extra
-                                                                                                    and
-                                                                                                    need
-                                                                                                    to be paid to the
-                                                                                                    concerned
-                                                                                                    authorities as per
-                                                                                                    actuals.
-                                                                                                </p>
-                                                                                            </li>
-                                                                                            <li>
-                                                                                                <p>For driving between
-                                                                                                    10:00
-                                                                                                    pm
-                                                                                                    to 6:00 am on any of
-                                                                                                    the
-                                                                                                    nights, an
-                                                                                                    additional
-                                                                                                    allowance will be
-                                                                                                    applicable
-                                                                                                    and is to be paid to
-                                                                                                    the
-                                                                                                    driver.
-                                                                                                </p>
-                                                                                            </li>
-                                                                                            <li>
-                                                                                                <p>Please ensure you
-                                                                                                    have
-                                                                                                    covered all cities
-                                                                                                    you
-                                                                                                    plan
-                                                                                                    to visit in your
-                                                                                                    itinerary.
-                                                                                                    This will help our
-                                                                                                    driver
-                                                                                                    prepare accordingly.
-                                                                                                    Adding
-                                                                                                    city to the
-                                                                                                    itinerary
-                                                                                                    during
-                                                                                                    trip may not be
-                                                                                                    possible.
-                                                                                                </p>
-                                                                                            </li>
-                                                                                            <li>
-                                                                                                <p>If your Trip has Hill
-                                                                                                    climbs,
-                                                                                                    cab AC may be
-                                                                                                    switched
-                                                                                                    off
-                                                                                                    during such climbs.
-                                                                                                </p>
-                                                                                            </li>
-                                                                                        </ul>
+                                                                                        
                                                                                     </div>
                                                                                 </div>
                                                                             </div>

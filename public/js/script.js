@@ -1074,12 +1074,6 @@
     console.log("clicked");
   });
 
-  $("#addcity").click(function () {
-    $("#extracity").append(
-      '<div class="search-body"><h6>To <span class="removethis"><i class="fa fa-times close" data-dismiss="alert"></i>Remove</span></h6><input type="text" class="form-control open-select" placeholder="City"></div>'
-    );
-  });
-
   $("#airpick").click(function () {
     $("#airportpickup").show();
     $("#airportdrop").hide();

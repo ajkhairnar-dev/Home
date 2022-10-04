@@ -105,6 +105,13 @@ class BookingController extends Controller
         }
         $point = $point +  $getnewPoints;
 
+        // creadit cabish point 
+        $cabishupdate['customer_id'] = session()->get('isLogin')['mobile'];
+        $cabishupdate['types'] = 1;
+        $cabishupdate['points'] = $getnewPoints;
+
+        DB::table('cabishpoints')->insert($cabishupdate);
+
         //update customer table for cabish point
         DB::table('customer')
             ->where('mobile', $customer['mobile'])
@@ -120,11 +127,11 @@ class BookingController extends Controller
         $booking['pick_location'] = $tripmeta['pickup'];
         $booking['drop_location'] = $tripmeta['drop'];
         
-        
+        $bd['booking_id'] = $booking['booking_id'];
         //booking details 
         $bookingdetails['booking_id'] = $booking['booking_id'];
         $bookingdetails['full_name']  = $bd['userdetails']['fullName'];
-        $bookingdetails['gender']  = $bd['userdetails']['fullName'];
+        $bookingdetails['gender']  = $bd['userdetails']['gender'];
         $bookingdetails['email']  = $bd['userdetails']['email'];
         $bookingdetails['contact']  = $bd['userdetails']['contact'];
         $bookingdetails['pick_address']  = $bd['userdetails']['pickup'];
@@ -133,6 +140,7 @@ class BookingController extends Controller
         $bookingdetails['distance'] = $bd['distance'];
         $bookingdetails['date'] = $tripmeta['ddate'];
         $bookingdetails['time'] = $tripmeta['dtime'];
+        $bookingdetails['rdate'] = $tripmeta['rdate'];
 
         //transaction
         $transaction['booking_id'] = $booking['booking_id'];
@@ -196,14 +204,15 @@ class BookingController extends Controller
 
 
     public function search(Request $request) {
-        //dd($request);
         $trip = $request->query('triptype');
         $tripmeta['pickup'] = $request->query('pickup');
-        $tripmeta['drop'] = $request->query('drop');
+        if($request->query('triptype') == 'LOCALTRIP') {$tripmeta['drop'] = $request->query('pickup'); }
+        else {$tripmeta['drop'] = $request->query('drop'); }
         $tripmeta['triptype'] = $request->query('triptype');
         $tripmeta['ddate'] = $request->query('ddate');
         $tripmeta['dtime'] = $request->query('dtime');
-
+        $tripmeta['rdate'] = ($request->has('rdate')) ? $request->query('rdate') : "" ;
+        
         session()->put('searchdata', $tripmeta);
 
         switch ($trip) {
@@ -216,27 +225,50 @@ class BookingController extends Controller
             break;
         case "ROUNDTRIP":
             $data = roundtrip($request);
+            
+            $extracity = $request->query('round');
+            if(count($extracity) != 0){
+                $tripmeta['drop'] = $extracity[count($extracity)-1];
+            }
             return view('roundlist',['data' => $data,'tripmeta'=>$tripmeta]);
             break;
         case "LOCALTRIP":
-            $data = localtrip($request);
-            if($data==false) {
-            return view('noservice');
-            }
-            return view('locallist',['data' => $data,'tripmeta'=>$tripmeta]);
-            break;
+                $data = localtrip($request);
+                $tripmeta['drop'] = $request->query('pickup');
+                if($data==false) {
+                return view('noservice');
+                }
+                return view('locallist',['data' => $data,'tripmeta'=>$tripmeta]);
+                break;
+        case "AIRPICK":
+                $data = airpick($request);
+                if($data==false) {
+                return view('noservice');
+                }
+                return view('cablist',['data' => $data,'tripmeta'=>$tripmeta]);
+                break;
+         case "AIRDROP":
+                $data = airdrop($request);
+                if($data==false) {
+                return view('noservice');
+                }
+                return view('cablist',['data' => $data,'tripmeta'=>$tripmeta]);
+                break;
         default:
             echo "Your favorite color is neither red, blue, nor green!";
         }
-        
-        //dd($data);
-
-        
     }
 
 
     public function booking(Request $request) {
-        $distance = getDistance($request->pickup, $request->drop, "K");
+        
+        // dd($request->all());
+        if($request['triptype'] == "ROUNDTRIP"){
+            $distance = $request['distance'];
+        }else{
+            $distance = getDistance($request->pickup, $request->drop, "K");
+        }
+    
         $vdata = DB::table('vehicle_types')->where('type',$request->vehicletype)->first();
         $triptype = DB::table('trip_types')->where('code',$request->triptype)->first();
         $sitesetting = DB::table('site_settings')->first();
@@ -272,12 +304,13 @@ function oneway($request) {
 
     if(!empty($lpack)) {
         $resultdata = DB::select("SELECT lop.id , lop.pickup ,lop.`drop`, lop.kms,lor.rates , lor.after_rates,lor.discount ,lop.toll_tax,
-                vt.`type` as 'vehicletype', vt.title as 'vehicletitle', vt.image as 'vehicleimg', vt.seat, vt.ac, vt.ratings, vt.stars
+                vt.`type` as 'vehicletype', vt.title as 'vehicletitle', vt.image as 'vehicleimg', vt.seat, vt.ac, vt.ratings, vt.stars, tt.code , tt.inclusion , tt.exclusion , tt.additional_information 
                 FROM local_out_packages as lop
                 INNER JOIN local_out_pack_rates as lor ON lop.id = lor.pack_code
                 INNER JOIN vehicle_types as vt ON lor.vehicle_id = vt.id
-                where lop.id = '".$lpack->id."' ORDER BY vt.id ASC");
-                
+                INNER JOIN trip_types as tt ON lop.trip_types = tt.code
+                where lop.id = ".$lpack->id."
+                ORDER BY vt.id ASC");
         //$resultdata = getDistance($pickup,$drop);
         return $resultdata;
     }
@@ -287,6 +320,66 @@ function oneway($request) {
     }
 
     
+}
+
+
+
+function airpick($request) {
+
+    $trip = $request->query('triptype');
+    $pickup = $request->query('pickup');
+    $drop = $request->query('drop');
+
+    $lpack = DB::table('airport_pick_packages')
+    ->select('id')
+    ->where('pickup',$pickup)
+    ->where('drop',$drop)
+    ->first();
+
+    if(!empty($lpack)) {
+        $resultdata = DB::select("SELECT lop.id , lop.pickup ,lop.`drop`, lop.kms,lor.rates , lor.after_rates,lor.discount ,lop.toll_tax,
+                vt.`type` as 'vehicletype', vt.title as 'vehicletitle', vt.image as 'vehicleimg', vt.seat, vt.ac, vt.ratings, vt.stars,tt.code , tt.inclusion , tt.exclusion , tt.additional_information
+                FROM airport_pick_packages as lop
+                INNER JOIN airport_pick_package_rates as lor ON lop.id = lor.pack_code
+                INNER JOIN vehicle_types as vt ON lor.vehicle_id = vt.id
+                INNER JOIN trip_types as tt ON lop.trip_types = tt.code
+                where lop.id = '".$lpack->id."' ORDER BY vt.id ASC");
+                
+        //$resultdata = getDistance($pickup,$drop);
+        return $resultdata;
+    }
+    else {
+       return false;
+    }
+}
+
+function airdrop($request) {
+
+    $trip = $request->query('triptype');
+    $pickup = $request->query('pickup');
+    $drop = $request->query('drop');
+
+    $lpack = DB::table('airport_packages')
+    ->select('id')
+    ->where('pickup',$pickup)
+    ->where('drop',$drop)
+    ->first();
+
+    if(!empty($lpack)) {
+        $resultdata = DB::select("SELECT lop.id , lop.pickup ,lop.`drop`, lop.kms,lor.rates , lor.after_rates,lor.discount ,lop.toll_tax,
+                vt.`type` as 'vehicletype', vt.title as 'vehicletitle', vt.image as 'vehicleimg', vt.seat, vt.ac, vt.ratings, vt.stars,tt.code , tt.inclusion , tt.exclusion , tt.additional_information
+                FROM airport_packages as lop
+                INNER JOIN airport_package_rates as lor ON lop.id = lor.pack_code
+                INNER JOIN vehicle_types as vt ON lor.vehicle_id = vt.id
+                INNER JOIN trip_types as tt ON lop.trip_types = tt.code
+                where lop.id = '".$lpack->id."' ORDER BY vt.id ASC");
+                
+        //$resultdata = getDistance($pickup,$drop);
+        return $resultdata;
+    }
+    else {
+       return false;
+    }
 }
 
 
@@ -304,10 +397,11 @@ function localtrip($request) {
 
     if(!empty($lpack)) {
         $resultdata = DB::select("SELECT lop.id, lop.pickup, lor.pack_type, lor.rates, lor.after_rates, lor.after_hours ,lor.discount,
-                vt.`type` as 'vehicletype', vt.title as 'vehicletitle', vt.image as 'vehicleimg', vt.seat, vt.ac, vt.ratings, vt.stars
+                vt.`type` as 'vehicletype', vt.title as 'vehicletitle', vt.image as 'vehicleimg', vt.seat, vt.ac, vt.ratings, vt.stars,tt.code , tt.inclusion , tt.exclusion , tt.additional_information
                 FROM local_packages as lop
                 INNER JOIN local_rates as lor ON lop.id = lor.pack_code
                 INNER JOIN vehicle_types as vt ON lor.vehicle_id = vt.id
+                INNER JOIN trip_types as tt ON lop.trip_types = tt.code
                 where lop.id = '".$lpack->id."' AND lor.pack_type = '".$pack_type."' ORDER BY vt.id ASC");
                 
         //$resultdata = getDistance($pickup,$drop);
@@ -322,64 +416,79 @@ function localtrip($request) {
 
 function roundtrip($request){
     
+    
     $lpack = DB::table('round_packages')
     ->select('id')
     ->where('pickup',$request->query('pickup'))
     ->first();
     
     if(!empty($lpack)) {
-    
-    
-    $arr = [];
-    $pickupTime = $request->query('pickuptime'); 
-    $returnTime = $request->query('returntime'); 
-    $arr[0] =  $request->query('pickup');
-    $arr[1] =  $request->query('drop');
-    $extracity =$request->query('round'); 
-    $totalKm=0;
-    $totalRate = 0;
-    
-    $counter = 2;
-    for($i=0; $i < count($extracity); $i++) {
-        $arr[$counter] = $extracity[$i];
-        $counter++;
-    }
-    
-    $citywithdist=[];
-   
-    for($i=0; $i <=count($arr)-2; $i++){
-        $totalKm = $totalKm+getDistance($arr[$i],$arr[$i+1]);
-    }
-    
-    $arrcnt = count($arr)-1;
-    $totalKm = $totalKm + getDistance($arr[$arrcnt],$arr[0]);
-    
-    
-    $date1 = date_create($pickupTime);
-    $date2 = date_create($returnTime);
-    $diff = date_diff( $date1, $date2 );
-    $totalDays = $diff -> d;
-    
-    $avarage = 300;
-    $totalavg = $totalDays * $avarage;
-    //distance 1000
-    //avg distance  2 days X 300 = 600
-    //km return  if(1000>600) return 1000 else 600
-    
-    $allowance = $totalDays*0;
+       
+        if(($request->query('round'))) 
+        { 
+            $extracity = $request->query('round');
+        } else {
+            $extracity = [];
+        } 
+     
 
-    if($totalavg > $totalKm){
-        $totalRate = $totalavg;
-    } else {$totalRate = $totalKm;}
-            
-    $resultdata = DB::select("SELECT lop.id, lop.pickup, lor.rates, lor.after_rates,
-                vt.`type` as 'vehicletype', vt.title as 'vehicletitle', vt.image as 'vehicleimg' ,  vt.seat, vt.ac, vt.ratings, vt.stars
-                FROM round_packages as lop
-                INNER JOIN round_rates as lor ON lop.id = lor.pack_code
-                INNER JOIN vehicle_types as vt ON lor.vehicle_id = vt.id
-                where lop.id = '".$lpack->id."' ORDER BY vt.id ASC");
+        $arr = [];
+        $pickupTime = $request->query('pickuptime'); 
+        $returnTime = $request->query('returntime'); 
+        $arr[0] =  $request->query('pickup');
+        $arr[1] =  $request->query('drop');
+        $totalKm=0;
+        $totalRate = 0;
+        // dd($extracity);
+        
+        //if addmultiple cities
+        if(count($extracity) != 0){
+            $counter = 2;
+            for($i=0; $i < count($extracity); $i++) {
+                $arr[$counter] = $extracity[$i];
+                $counter++;
+            }
+
+            $citywithdist=[];
     
-    return [$resultdata, $totalRate, $allowance];
+            for($i=0; $i <=count($arr)-2; $i++){
+                $totalKm = $totalKm+getDistance($arr[$i],$arr[$i+1]);
+            }
+            $arrcnt = count($arr)-1;
+            $totalKm = $totalKm + getDistance($arr[$arrcnt],$arr[0]);
+        }else{
+            
+            $totalKm = getDistance($request->query('pickup'),$request->query('drop'));
+            $totalKm = $totalKm * 2;
+        }
+
+        $date1 = date_create($pickupTime);
+        $date2 = date_create($returnTime);
+        $diff = date_diff( $date1, $date2 );
+        $totalDays = $diff -> d;
+        
+        $avarage = 300;
+        $totalavg = $totalDays * $avarage;
+        //distance 1000
+        //avg distance  2 days X 300 = 600
+        //km return  if(1000>600) return 1000 else 600
+        
+        $allowance = $totalDays*0;
+
+        if($totalavg > $totalKm){
+            $totalRate = $totalavg;
+        } else {$totalRate = $totalKm;}
+                
+        $resultdata = DB::select("SELECT lop.id, lop.pickup, lor.rates, lor.after_rates,lor.discount,
+                    vt.`type` as 'vehicletype', vt.title as 'vehicletitle', vt.image as 'vehicleimg' ,  vt.seat, vt.ac, vt.ratings, vt.stars,
+                    tt.code , tt.inclusion , tt.exclusion , tt.additional_information
+                    FROM round_packages as lop
+                    INNER JOIN round_rates as lor ON lop.id = lor.pack_code
+                    INNER JOIN vehicle_types as vt ON lor.vehicle_id = vt.id
+                    INNER JOIN trip_types as tt ON lop.trip_types = tt.code
+                    where lop.id = '".$lpack->id."' ORDER BY vt.id ASC");
+        
+        return [$resultdata, $totalRate, $allowance];
 
     }
 }

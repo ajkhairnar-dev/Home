@@ -104,15 +104,21 @@
                                                                     <!-- <h5><span class="ti-location-pin"></span>Nashik</h5>
                                                                     <span class="route_line"></span>
                                                                     <h5><span class="ti-target"></span>Mumbai</h5> -->
-        
+                                                                    @php 
+                                                                        $pickup = explode(',', $data['pickup'] );
+                                                                        $pickup = $pickup[0];
+
+                                                                        $drop = explode(',', $data['drop'] );
+                                                                        $drop = $drop[0];
+                                                                    @endphp 
                                                                     <ul class="route-row">
                                                                         <li>
-                                                                            <span class="ti-location-pin"></span>Nashik
+                                                                            <span class="ti-location-pin"></span>{{$pickup}}
                                                                         </li>
                                                                         <li class="route_line">
                                                                         </li>
-                                                                        <li><span class="ti-target"></span>Mumbai</li>
-                                                                        <li><span class="ti-calendar"></span>12-9-2022</li>
+                                                                        <li><span class="ti-target"></span>{{$drop}}</li>
+                                                                        <li><span class="ti-calendar"></span>{{$data['ddate']}}</li>
                                                                     </ul>
                                                                 </div>
                                                             </div>
@@ -754,6 +760,7 @@ jQuery(function($){
         triptype:{!! json_encode($triptype) !!},
         sitesetting : {!! json_encode($sitesetting) !!}
       }
+
    
       var url = {!! json_encode(url('cabishpoint')) !!}
       $.redirect(url, object, "POST");

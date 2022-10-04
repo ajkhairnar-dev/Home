@@ -132,7 +132,7 @@
 
 <!-- Theme js-->
 <script src="{{asset('js/script.js')}}"></script>
-<script src="{{asset('js/cutom.js')}}"></script>
+<script src="{{asset('js/custom.js')}}"></script>
 <script src="{{asset('js/jquery.fancyMessenger.js')}}"></script>
 <!-- popper js  -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js"></script>

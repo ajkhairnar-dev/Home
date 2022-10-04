@@ -87,7 +87,7 @@ $(document).ready(function() {
     
   var counter = 0;
   $("#addcity").click(function () {
-   
+   console.log(counter)
     counter = counter+1
     $("#extracity").append(
       `<div class="search-body"><h6>To <span class="removethis">
