@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-
+use DB;
 
 class HomeController extends Controller
 {
@@ -27,8 +27,10 @@ class HomeController extends Controller
      */
     public function index() {
         
-       
-        return view('users.my-profile');
+        $id = session()->get('isLogin')['id'];
+        $data= DB::select("select * from customer where id = '".$id."'");
+        // dd($data[0]);
+        return view('users.my-profile',['data'=>$data[0]]);
     }
     
     

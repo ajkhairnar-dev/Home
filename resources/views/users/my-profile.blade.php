@@ -103,99 +103,37 @@
                                                         <h6>name</h6>
                                                     </div>
                                                     <div class="right">
-                                                        <h6>{{$user->username}}</h6>
+                                                        <h6>{{ $data->name ? $data->name : "-"  }}<h6>
                                                     </div>
                                                 </div>
                                             </li>
                                             <li class="border-bottom p-1">
                                                 <div class="details">
                                                     <div class="left">
-                                                        <h6>birthday</h6>
+                                                        <h6>Customer Id</h6>
                                                     </div>
                                                     <div class="right">
-                                                        <h6>21/04/1993</h6>
+                                                        <h6>CUST3434</h6>
                                                     </div>
                                                 </div>
                                             </li>
                                             <li class="border-bottom p-1">
                                                 <div class="details">
                                                     <div class="left">
-                                                        <h6>gender</h6>
+                                                        <h6>email</h6>
                                                     </div>
                                                     <div class="right">
-                                                        <h6>name</h6>
+                                                        <h6>{{ $data->email ? $data->email : "-" }}</h6>
                                                     </div>
                                                 </div>
                                             </li>
                                             <li class="border-bottom p-1">
                                                 <div class="details">
                                                     <div class="left">
-                                                        <h6>street address</h6>
+                                                        <h6>Mobile</h6>
                                                     </div>
                                                     <div class="right">
-                                                        <h6>Pathardi</h6>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li class="border-bottom p-1">
-                                                <div class="details">
-                                                    <div class="left">
-                                                        <h6>city/state</h6>
-                                                    </div>
-                                                    <div class="right">
-                                                        <h6>Nashik, Maharashtra</h6>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li class="p-1">
-                                                <div class="details">
-                                                    <div class="left">
-                                                        <h6>zip</h6>
-                                                    </div>
-                                                    <div class="right">
-                                                        <h6>422010</h6>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="dashboard-box">
-                                    <div class="dashboard-title">
-                                        <h4>login details</h4>
-                                    </div>
-                                    <div class="dashboard-detail border p-3  rounded shadow-sm">
-                                        <ul>
-                                            <li class="border-bottom p-1">
-                                                <div class="details">
-                                                    <div class="left">
-                                                        <h6>email address</h6>
-                                                    </div>
-                                                    <div class="right">
-                                                        <h6>{{$user->email}}</h6>
-                                                        <span data-bs-toggle="modal" data-bs-target="#edit-address">edit</span>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li class="border-bottom p-1">
-                                                <div class="details">
-                                                    <div class="left">
-                                                        <h6>phone no:</h6>
-                                                    </div>
-                                                    <div class="right">
-                                                        <h6>+91 7447344789</h6>
-                                                        <span data-bs-toggle="modal" data-bs-target="#edit-phone">edit</span>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li class=" p-1">
-                                                <div class="details">
-                                                    <div class="left">
-                                                        <h6>password</h6>
-                                                    </div>
-                                                    <div class="right">
-                                                        <h6>&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;</h6>
-                                                        <span data-bs-toggle="modal" data-bs-target="#edit-password">edit</span>
+                                                        <h6>{{$data->mobile ? $data->mobile : "-"}}</h6>
                                                     </div>
                                                 </div>
                                             </li>
