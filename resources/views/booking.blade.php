@@ -676,108 +676,108 @@ $(document).ready(function(){
 jQuery(function($){
 //passenger form validation
   if ($("#bookingform").length > 0) {
-    $("#bookingform").validate({
-      
-    rules: {
-        fullName: {
-            required: true,
-            maxlength: 50
+        $("#bookingform").validate({
+        
+        rules: {
+            fullName: {
+                required: true,
+                maxlength: 50
+            },
+            gender:{
+                required:true
+            },
+            email:{
+                required: true,
+                maxlength: 50,
+                email: true
+            },
+            contact:{
+                required: true,
+                digits:true,
+                minlength: 10,
+                maxlength:10
+            },
+            pickup:{
+                required: true
+            },
+            drop:{
+                required: true
+            },
+            specialrequest:{
+                required:false
+            },
+            acceptTC:{
+                required:true
+            }
         },
-        gender:{
-            required:true
+        messages: {
+            fullName: {
+            required: "Please enter fullname",
+            maxlength: "The fullName should less than or equal to 50 characters"
+            },
+            gender:{
+                required: "Please select gender",
+            },
+            email:{
+                required: "Please enter valid email",
+                email: "Please enter valid email",
+                maxlength: "The email name should less than or equal to 50 characters",
+            },
+            contact:{
+                required: "Please enter contact",
+                maxlength: "Your contact maxlength should be 10 digit."
+            },
+            pickup: {
+            required: "Please enter pickup address"
+            },
+            drop: {
+            required: "Please enter drop address"
+            },
+            specialrequest:{
+                required:"Optional"
+            },
+            acceptTC:{
+                required:"Please Accept T&C."
+            }
         },
-        email:{
-            required: true,
-            maxlength: 50,
-            email: true
-        },
-        contact:{
-            required: true,
-            digits:true,
-            minlength: 10,
-            maxlength:10
-        },
-        pickup:{
-            required: true
-        },
-        drop:{
-            required: true
-        },
-        specialrequest:{
-            required:false
-        },
-        acceptTC:{
-            required:true
-        }
-    },
-    messages: {
-        fullName: {
-          required: "Please enter fullname",
-          maxlength: "The fullName should less than or equal to 50 characters"
-        },
-        gender:{
-            required: "Please select gender",
-        },
-        email:{
-            required: "Please enter valid email",
-            email: "Please enter valid email",
-            maxlength: "The email name should less than or equal to 50 characters",
-        },
-        contact:{
-            required: "Please enter contact",
-            maxlength: "Your contact maxlength should be 10 digit."
-        },
-        pickup: {
-          required: "Please enter pickup address"
-        },
-        drop: {
-          required: "Please enter drop address"
-        },
-        specialrequest:{
-            required:"Optional"
-        },
-        acceptTC:{
-            required:"Please Accept T&C."
-        }
-    },
 
+        
+        submitHandler: function(form) {
+        var tk = {!! json_encode(csrf_token()) !!}
+        var object = {
+            _token:tk,
+            userdetails :{
+                fullName : $("#fullName").val(),
+                gender : $("#gender").val(),
+                email : $("#email").val(),
+                contact : $("#contact").val(),
+                pickup : $(".pickupadd").val(),
+                drop : $(".dropadd").val(),
+                specialrequest : $("#specialrequest").val(),
+                acceptTC : $("#acceptTC").val()
+            },
+            payment : {
+                paytype : paytype,
+                amount : finalamount == 0 ? Number(amount) : Number(finalamount),
+                remaining: paytype == "fullpayment" ? 0 : Number(mainprice) - Number(finalamount),
+                promocode : finalselectedPromocode,
+                discountamount : finaldiscountAmount,
+            },
+            vehicles:{!! json_encode($vdata) !!},
+            distance:{!! json_encode($distance) !!},
+            hrs : {!! json_encode($hrs) !!},
+            triptype:{!! json_encode($triptype) !!},
+            sitesetting : {!! json_encode($sitesetting) !!}
+        }
+
+        console.log(object);
     
-    submitHandler: function(form) {
-      var tk = {!! json_encode(csrf_token()) !!}
-      var object = {
-        _token:tk,
-        userdetails :{
-            fullName : $("#fullName").val(),
-            gender : $("#gender").val(),
-            email : $("#email").val(),
-            contact : $("#contact").val(),
-            pickup : $(".pickupadd").val(),
-            drop : $(".dropadd").val(),
-            specialrequest : $("#specialrequest").val(),
-            acceptTC : $("#acceptTC").val()
-        },
-        payment : {
-            paytype : paytype,
-            amount : finalamount == 0 ? Number(amount) : Number(finalamount),
-            remaining: paytype == "fullpayment" ? 0 : Number(mainprice) - Number(finalamount),
-            promocode : finalselectedPromocode,
-            discountamount : finaldiscountAmount,
-        },
-        vehicles:{!! json_encode($vdata) !!},
-        distance:{!! json_encode($distance) !!},
-        hrs : {!! json_encode($hrs) !!},
-        triptype:{!! json_encode($triptype) !!},
-        sitesetting : {!! json_encode($sitesetting) !!}
-      }
-
-      console.log(object);
-   
-      var url = {!! json_encode(url('cabishpoint')) !!}
-      $.redirect(url, object, "POST");
-   
-    }
-  })
- }
+        var url = {!! json_encode(url('cabishpoint')) !!}
+        $.redirect(url, object, "POST");
+    
+        }
+    })
+   }
 });
 
 </script>

@@ -3,6 +3,14 @@
 @section('metadesc', 'My Profile Page')
 @include('layouts.nav')
 
+<style>
+    .modal-backdrop {
+    z-index: 0!important;
+    }
+    .error{
+        color:red;
+    }
+    </style> 
     <!-- section start-->
     <section class="small-section dashboard-section bg-inner" data-sticky_parent>
         <div class="container">
@@ -22,9 +30,9 @@
                                     </a>
                                 </div>
                                 <div class="profile-detail">
-                                    <h5>Ravishankar Pal</h5>
-                                    <h6>+917447344789</h6>
-                                    <h6>domainsdefault@gmail.com</h6>
+                                    <h5>{{ $data->name ? $data->name : "No Name"  }}</h5>
+                                    <h6>+91{{ $data->mobile ? $data->mobile : "-"  }}</h6>
+                                    <h6>{{ $data->email ? $data->email : "No Email"  }}</h6>
                                 </div>
                             </div>
                             <div class="faq-tab">
@@ -250,62 +258,40 @@
 
 
     <!-- edit profile modal start -->
-    <div class="modal fade edit-profile-modal" id="edit-profile" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade edit-profile-modal" id="edit-profile" role="dialog" aria-labelledby="exampleModalLabel">
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Edit Profile</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
+                <form method="post" action="javascript:;" id="profilesubmit">
                 <div class="modal-body">
-                    <form>
+                   
+                        @csrf
                         <div class="row">
                             <div class="form-group col-md-6">
-                                <label for="first">first name</label>
-                                <input type="text" class="form-control" id="first" placeholder="first name">
+                                <label for="first">Full Name</label>
+                                <input type="text" name="pname" class="form-control" id="pname" placeholder="Full Name" value="{{ $data->name ? $data->name : '' }}">
+                                <label id="pname-error" class="error" for="pname" style="display: inline-block;"></label>
                             </div>
                             <div class="form-group col-md-6">
-                                <label for="last">last name</label>
-                                <input type="text" class="form-control" id="last" placeholder="last name">
+                                <label for="last">Email</label>
+                                <input type="text" name="pemail" class="form-control" id="pemail" placeholder="Email Id" value="{{ $data->email ? $data->email : '' }}">
                             </div>
                             <div class="form-group col-md-6">
-                                <label for="gender">gender</label>
-                                <select id="gender" class="form-control">
-                                    <option selected>Choose...</option>
-                                    <option>female</option>
-                                    <option>male</option>
-                                </select>
+                                <label for="last">Mobile Number</label>
+                                <input type="text" name="pmobile" class="form-control" id="pmobile" placeholder="Mobile Numbaer" value="{{ $data->mobile ? $data->mobile : '' }}">
                             </div>
-                            <div class="form-group col-md-6">
-                                <label>birthday</label>
-                                <input class="form-control" placeholder="18 april" id="datepicker" />
-                            </div>
-                            <div class="form-group col-12">
-                                <label for="inputAddress">Address</label>
-                                <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
-                            </div>
-                            <div class="form-group col-md-5">
-                                <label for="inputCity">City</label>
-                                <input type="text" class="form-control" id="inputCity">
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="inputState">State</label>
-                                <select id="inputState" class="form-control">
-                                    <option selected>Choose...</option>
-                                    <option>...</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label for="inputZip">Zip</label>
-                                <input type="text" class="form-control" id="inputZip">
-                            </div>
+                            
                         </div>
-                    </form>
+              
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-solid">Save changes</button>
+                    <a href="javascript:;" class="btn btn-secondary" data-bs-dismiss="modal">Close</a>
+                    <button type="submit" class="btn btn-solid">Save changes</button>
                 </div>
+                </form>
             </div>
         </div>
     </div>
@@ -533,5 +519,76 @@
     </div>
     <!-- edit password modal start -->
     
+
+
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.js"></script>  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/additional-methods.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/mgalante/jquery.redirect@master/jquery.redirect.js"></script>
+  
+    
+<script>
+    jQuery(function($){
+    //passenger form validation
+    if ($("#profilesubmit").length > 0) {
+        console.log("jayesh")
+        $("#profilesubmit").validate({
+        
+            rules: {
+                pname: {
+                    required: true,
+                    maxlength: 50
+                },
+                pemail:{
+                    required: true,
+                    maxlength: 50,
+                    email: true
+                },
+                pmobile:{
+                    required: true,
+                    digits:true,
+                    minlength: 10,
+                    maxlength:10
+                }
+            },
+            messages: {
+                pname: {
+                    required: "Please enter fullname",
+                    maxlength: "The fullName should less than or equal to 50 characters"
+                },
+                pemail:{
+                    required: "Please enter valid email",
+                    email: "Please enter valid email",
+                    maxlength: "The email name should less than or equal to 50 characters",
+                },
+                pmobile:{
+                    required: "Please enter contact",
+                    maxlength: "Your contact maxlength should be 10 digit."
+                }
+            },
+
+            
+            submitHandler: function(form) {
+                var tk = {!! json_encode(csrf_token()) !!}
+                var object = {
+                    _token:tk,
+                    name : $("#pname").val(),
+                    email : $("#pemail").val(),
+                    mobile : $("#pmobile").val()
+                }
+
+                var url = {!! json_encode(url('updateprofile')) !!}
+                $.redirect(url, object, "POST");
+        
+            }
+    
+        })
+    }else{
+        alert("data")
+    }
+   
+});
+</script>
+
     @include('layouts.footer')
 

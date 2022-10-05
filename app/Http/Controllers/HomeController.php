@@ -32,7 +32,19 @@ class HomeController extends Controller
         // dd($data[0]);
         return view('users.my-profile',['data'=>$data[0]]);
     }
-    
+
+    public function updateprofile(Request $request){
+        $id = session()->get('isLogin')['id'];
+        $profile['name'] = $request['name'];
+        $profile['email'] = $request['email'];
+        $profile['mobile'] = $request['mobile'];
+
+        DB::table('customer')
+            ->where('id', $id)
+            ->update($profile);
+            
+        return redirect('my-profile');
+    }
     
     public function trips() {
       

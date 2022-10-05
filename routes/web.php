@@ -38,7 +38,7 @@ Auth::routes();
 Route::get('/my-profile', [App\Http\Controllers\HomeController::class, 'index'])->name('account');
 Route::get('/my-trips', [App\Http\Controllers\HomeController::class, 'trips'])->name('mybookings');
 Route::get('/earnings', [App\Http\Controllers\HomeController::class, 'earnings'])->name('earnings');
-
+Route::post('/updateprofile', [App\Http\Controllers\HomeController::class, 'updateprofile']);
 
 Route::get('cabishpoints')->name('cabishpoints');
 
