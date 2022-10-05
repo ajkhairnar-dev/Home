@@ -58,17 +58,17 @@
                                 <div class="dashboard-main">
 
                                     <div class="dashboard-intro">
-                                        <h5>welcome! <span>Ravishankar Pal</span></h5>
-                                        <p>you have completed 50 cabish points.
+                                        <h5>welcome! <span>{{ $data->name ? $data->name : "-"  }}</span></h5>
+                                        <p>you have completed {{ session()->get('isLogin')['cabishpoint'] }} cabish points.
                                         </p>
                                     </div>
-
+                                   
                                     <div class="counter-section">
                                         <div class="row">
                                             <div class="col-xl-3 col-sm-6">
                                                 <div class="counter-box">
                                                     <img src="assets/images/icon/taxi.png" class="img-fluid blur-up lazyload" alt="">
-                                                    <h3><span class="ti-server"></span>50</h3>
+                                                    <h3><span class="ti-server" style="margin-right: 11px;"></span>{{ session()->get('isLogin')['cabishpoint'] }}</h3>
                                                     <h5>Points</h5>
                                                 </div>
                                             </div>
@@ -81,14 +81,18 @@
                                                 <div class="activity-box">
                                                     <h6>recent activity</h6>
                                                     <ul>
+                                                        @foreach($points as $point)
                                                         <li>
-                                                            Date: 15th June 2022Nashik to Mumbai
-                                                            <span class='btn-sm btn-success'>20 Points</span>
+                                                            Booking Id : {{$point->booking_id}} |
+                                                            Date : {{$point->created_at}}
+                                                            @if($point->types == 1)
+                                                                <span class='btn-sm btn-primary' style="margin-left:10px;"> Credit </span>
+                                                            @else
+                                                                <span class='btn-sm btn-danger' style="margin-left:10px;"> Debit </span>
+                                                            @endif
+                                                            <span class='btn-sm btn-success'>{{$point->points}} Points</span>
                                                         </li>
-                                                        <li>
-                                                            Date: 15th June 2022Nashik to Mumbai
-                                                            <span class='btn-sm btn-danger'>20 Points</span>
-                                                        </li>
+                                                        @endforeach
                                                     </ul>
                                                 </div>
                                             </div>
@@ -115,7 +119,7 @@
                                                     </div>
                                                 </div>
                                             </li>
-                                            <li class="border-bottom p-1">
+                                            <!-- <li class="border-bottom p-1">
                                                 <div class="details">
                                                     <div class="left">
                                                         <h6>Customer Id</h6>
@@ -124,7 +128,7 @@
                                                         <h6>CUST3434</h6>
                                                     </div>
                                                 </div>
-                                            </li>
+                                            </li> -->
                                             <li class="border-bottom p-1">
                                                 <div class="details">
                                                     <div class="left">

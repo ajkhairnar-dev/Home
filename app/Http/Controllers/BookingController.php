@@ -86,13 +86,15 @@ class BookingController extends Controller
         $customer = session()->get('isLogin');
         $bd= session()->get('bookingdetail');
 
+        $generatebookingid = $this->generateUniqueCode();
+
         $point = 0;
         //------------- cabish point --------- 
         //debit cabish point
         if($bd['cabishpoint']['isptsapply'] == "YES"){
             $point = (int)$bd['cabishpoint']['custtotalpoints'] - (int)$bd['cabishpoint']['redeempoint'];
             
-            $cabishupdate['customer_id'] = session()->get('isLogin')['mobile'];
+            $cabishupdate['customer_id'] = session()->get('isLogin')['id'];
             $cabishupdate['types'] = 0;
             $cabishupdate['points'] = (int)$bd['cabishpoint']['redeempoint'];
             DB::table('cabishpoints')->insert($cabishupdate);
@@ -107,7 +109,7 @@ class BookingController extends Controller
         $point = $point +  $getnewPoints;
 
         // creadit cabish point 
-        $cabishupdate['customer_id'] = session()->get('isLogin')['mobile'];
+        $cabishupdate['customer_id'] = session()->get('isLogin')['id'];
         $cabishupdate['types'] = 1;
         $cabishupdate['points'] = $getnewPoints;
 
@@ -121,7 +123,7 @@ class BookingController extends Controller
         //--------------------------------------------------------------
         $tripmeta = session()->get('searchdata');
 
-        $booking['booking_id'] = $this->generateUniqueCode();
+        $booking['booking_id'] =  $generatebookingid;
         $booking['customer_id'] = $customer['id'];
         $booking['trip_types'] = (int)$bd['triptype']['id'];
         $booking['vehicle_types'] = $bd['vehicles']['id'];

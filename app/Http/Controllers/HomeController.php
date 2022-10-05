@@ -29,8 +29,9 @@ class HomeController extends Controller
         
         $id = session()->get('isLogin')['id'];
         $data= DB::select("select * from customer where id = '".$id."'");
-        // dd($data[0]);
-        return view('users.my-profile',['data'=>$data[0]]);
+        $cabishpoint = DB::select("select * from cabishpoints c where c.customer_id ='".$id."'");
+       
+        return view('users.my-profile',['data'=>$data[0],'points'=>$cabishpoint]);
     }
 
     public function updateprofile(Request $request){
@@ -42,6 +43,11 @@ class HomeController extends Controller
         DB::table('customer')
             ->where('id', $id)
             ->update($profile);
+
+            
+// select * from bookings b 
+// inner join booking_details bd on b.booking_id = bd.booking_id 
+// where b.customer_id = 6
             
         return redirect('my-profile');
     }
