@@ -133,6 +133,7 @@
 <!-- Theme js-->
 <script src="{{asset('js/script.js')}}"></script>
 <script src="{{asset('js/custom.js')}}"></script>
+<script src="{{asset('js/menu.js')}}"></script>
 <script src="{{asset('js/jquery.fancyMessenger.js')}}"></script>
 <!-- popper js  -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js"></script>
@@ -144,96 +145,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/additional-methods.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/mgalante/jquery.redirect@master/jquery.redirect.js"></script>
   <script src="https://www.gstatic.com/firebasejs/6.0.2/firebase.js"></script>
-<!-- / -->
-
-<script>
-    $(document).ready(function() {
-        $('.menu-tab').click(function() {
-            $('.menu-hide').toggleClass('show');
-            $('.menu-tab').toggleClass('active');
-        });
-        $('a').click(function() {
-            $('.menu-hide').removeClass('show');
-            $('.menu-tab').removeClass('active');
-        });
-    });
-</script>
-
-
-<script>
-
-
-    $('#datepicker').datepicker({
-        uiLibrary: 'bootstrap4',
-        format: 'dd mmmm'
-    });
-    $('.datepicker').datepicker({
-        uiLibrary: 'bootstrap4',
-        format: 'dd mmmm'
-    });
-    $('#datepicker1').datepicker({
-        uiLibrary: 'bootstrap4',
-        format: 'dd mmmm'
-    });
-    $('#datepicker2').datepicker({
-        uiLibrary: 'bootstrap4',
-        format: 'dd mmmm'
-    });
-    $('#datepicker3').datepicker({
-        uiLibrary: 'bootstrap4',
-        format: 'dd mmmm'
-    });
-    $('#pickup').datetimepicker({
-        uiLibrary: 'bootstrap4',
-        modal: true,
-        footer: true
-    });
-    $('#dropoff').datetimepicker({
-        uiLibrary: 'bootstrap4',
-        modal: true,
-        footer: true
-    });
-    $('.mydate').datetimepicker({
-        uiLibrary: 'bootstrap4',
-        modal: true,
-        footer: true
-    });
-    $('.datetimepicker').datepicker({
-        minDate:new Date(),
-        uiLibrary: 'bootstrap4',
-        modal: true,
-        footer: true
-    });
-    $('.datetimepicker123').datepicker({
-        minDate:new Date(),
-        uiLibrary: 'bootstrap4',
-        modal: true,
-        footer: true
-    });
-    $('#departure').datepicker({
-        uiLibrary: 'bootstrap4'
-    });
-    $('#return').datepicker({
-        uiLibrary: 'bootstrap4'
-    });
-    $('#during').datepicker({
-        uiLibrary: 'bootstrap4'
-    });
-    
-    $('.timepicker').timepicker({
-    timeFormat: 'h:mm p',
-    interval: 30,
-    minTime: '00:00am',
-    maxTime: '11:30pm',
-    defaultTime: '10',
-    startTime: '00:00',
-    dynamic: false,
-    dropdown: true,
-    scrollbar: true
-    });
-</script>
-
-<style type="text/css">
+  
+  
+  <style type="text/css">
     .pulse {
       animation: pulse-animation 2s infinite;
     }
@@ -254,6 +168,20 @@
       }
     }
 </style>
+<!-- / -->
+
+<script>
+    $(document).ready(function() {
+        $('.menu-tab').click(function() {
+            $('.menu-hide').toggleClass('show');
+            $('.menu-tab').toggleClass('active');
+        });
+        $('a').click(function() {
+            $('.menu-hide').removeClass('show');
+            $('.menu-tab').removeClass('active');
+        });
+    });
+</script>
 
 
 
@@ -267,93 +195,6 @@ $(document).ready(function() {
             $("input").on("focusout", function() {
                 $(".review__booking").css("position", "sticky");
             })
-        })
-
-$(document).ready(function() {
-    
-  var counter = 0;
-  $("#addcity").click(function () {
-   
-    counter = counter+1
-    $("#extracity").append(
-      `<div class="search-body"><h6>To <span class="removethis">
-      <i class="fa fa-times close" data-dismiss="alert"></i>Remove</span></h6>
-      <input type="text" class="form-control open-select" name="round[]" id="rr${counter}" placeholder="City">
-      </div>`
-    );
-    initialize();
-  });
-/*google map code*/
-// function initialize() {
-//     console.log('function initi');
-
-//     var acInputs = document.getElementsByClassName("open-select");
-//     for (var i = 0; i < acInputs.length; i++) {
-//         var autocomplete;
-//         autocomplete = new google.maps.places.Autocomplete((acInputs[i]), {
-//             types: ['geocode'],
-//             componentRestrictions: {
-//                 country: "IN"
-//             }
-//         });
-//         autocomplete.inputId = acInputs[i].id;
-//     }
-    
-//     google.maps.event.addListener(autocomplete, 'place_changed', function() {
-//             var near_place = autocomplete.getPlace();
-//     });
-// }
-// initialize();
-
-
-
-
-/*google map code*/
-function initialize() {
-    var acInputs = document.getElementsByClassName("open-select");
-    for (var i = 0; i < acInputs.length; i++) {
-        var autocomplete;
-        autocomplete = new google.maps.places.Autocomplete((acInputs[i]), {
-            types: ['(cities)'],
-            componentRestrictions: {
-                country: "IN"
-            }
-        });
-        autocomplete.inputId = acInputs[i].id;
-    }
-    
-    google.maps.event.addListener(autocomplete, 'place_changed', function() {
-            var near_place = autocomplete.getPlace();
-    });
-
-    var airinput = document.getElementsByClassName("open-select-airport");
-    for (var j = 0; j < airinput.length; j++) {
-        var autocompleteair;
-        autocompleteair = new google.maps.places.Autocomplete((airinput[j]), {
-            types: ['airport'],
-            componentRestrictions: {
-                country: "IN"
-            }
-        });
-        autocompleteair.inputId = airinput[j].id;
-    }
-    
-    google.maps.event.addListener(autocompleteair, 'place_changed', function() {
-            var near_place = autocompleteair.getPlace();
-    });
-}
-
-initialize();
-
-
-
-
-
-
-
-
-
-
 
 
 $.fancyMessenger({
@@ -375,13 +216,13 @@ $.fancyMessenger({
 
 var isOtpSent = false;
 var firebaseConfig = {
-    apiKey: "AIzaSyCTa0dyZBZ2OsJ2r95zJNkK4qrYCcGQm5k",
-    authDomain: "cbsdemo-158fa.firebaseapp.com",
-    projectId: "cbsdemo-158fa",
-    storageBucket: "cbsdemo-158fa.appspot.com",
-    messagingSenderId: "316223645178",
-    appId: "1:316223645178:web:6fea3fe99526712640b043",
-    measurementId: "G-9EB4FSQ4BT"
+    apiKey: "AIzaSyAssgHFMPH3S1Tjkp-aw3ywjVOvK45QSkM",
+    authDomain: "gocabish-ce43b.firebaseapp.com",
+    projectId: "gocabish-ce43b",
+    storageBucket: "gocabish-ce43b.appspot.com",
+    messagingSenderId: "417622847128",
+    appId: "1:417622847128:web:09bd723a77d03046f7aaed",
+    measurementId: "G-00K4NZEMRN"
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -532,14 +373,6 @@ jQuery(function($){
 });
 
 </script>
-
-<!-- Firebase  added by jayesh khairnar -->
-<script type="text/javascript">
-
-
-
-</script>
-<!-- // -->
 
 
 </body>

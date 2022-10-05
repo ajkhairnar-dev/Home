@@ -52,17 +52,31 @@
                 </div>
                 @endauth
                 
-                @guest
-                    <li><a data-bs-toggle="modal" data-bs-target="#registration_popUp" class="list-group-item">Login</a></li>
-                @endguest
+                @if(session()->has('isLogin'))
+                @else
+                <li><a class="list-group-item" data-bs-toggle="modal" data-bs-target="#registration_popUp">Login</a></li>
+                @endif
                 
                 <li><a href="index.php" class="list-group-item "></a></li>
                 <li><a href="{{route('home')}}" class="list-group-item {{ (request()->is('home')) ? 'active' : '' }}"><span class="ti-home"></span> Home</a></li>
-                <li><a href="{{route('about')}}" class="list-group-item "><span class="ti-world"></span> About us</a></li>
-                <li><a href="{{route('bookride')}}" class="list-group-item "><span class="ti-car"></span> Book a Ride</a></li>
-                <li><a href="{{route('account')}}" class="list-group-item "><span class="ti-user"></span> My Profile</a></li>
-                <li><a href="{{route('mybookings')}}" class="list-group-item "><span class="ti-map-alt"></span> My Trips</a></li>
-                <li><a href="{{route('earnings')}}" class="list-group-item "><span class="ti-money"></span> Earnings</a></li>
+                <li><a href="{{route('about')}}" class="list-group-item {{ (request()->is('about-us')) ? 'active' : '' }} "><span class="ti-world"></span> About us</a></li>
+                <li><a href="{{route('bookride')}}" class="list-group-item {{ (request()->is('book-ride')) ? 'active' : '' }} "><span class="ti-car"></span> Book a Ride</a></li>
+                
+                
+                @if(session()->has('isLogin'))
+                
+                <li><a href="{{route('account')}}" class="list-group-item {{ (request()->is('my-profile')) ? 'active' : '' }} "><span class="ti-user"></span> My Profile</a></li>
+                <li><a href="{{route('mybookings')}}" class="list-group-item {{ (request()->is('my-trips')) ? 'active' : '' }} "><span class="ti-map-alt"></span> My Trips</a></li>
+                <li><a href="{{route('earnings')}}" class="list-group-item {{ (request()->is('earnings')) ? 'active' : '' }} "><span class="ti-money"></span> Earnings</a></li>
+                @else
+                
+                <li><a href="" data-bs-toggle="modal" data-bs-target="#registration_popUp" class="list-group-item"><span class="ti-user"></span> My Profile</a></li>
+                <li><a href="" data-bs-toggle="modal" data-bs-target="#registration_popUp" class="list-group-item"><span class="ti-map-alt"></span> My Trips</a></li>
+                <li><a href="" data-bs-toggle="modal" data-bs-target="#registration_popUp" class="list-group-item"><span class="ti-money"></span> Earnings</a></li>
+                
+               
+                
+                @endif
 
                 <!--<li class="nav-item has-submenu list-group-item ">
                             		<a class="nav-link" href="#"> Submenu links</a>
@@ -72,9 +86,9 @@
                             		    <li><a class="nav-link" href="#">Submenu item 3 </a> </li>
                             		</ul>
                             	</li>--->
-                <li><a href="{{route('cabishpoints')}}" class="list-group-item "><span class="ti-server"></span> Cabish Points</a></li>
-                <li><a href="{{route('careers')}}" class="list-group-item "><span class="ti-linkedin"></span> Careers</a></li>
-                <li><a href="{{route('contact')}}" class="list-group-item "><span class="ti-email"></span> Contact Us</a></li>
+                <li><a href="{{route('cabishpoints')}}" class="list-group-item {{ (request()->is('cabishpoints')) ? 'active' : '' }} "><span class="ti-server"></span> Cabish Points</a></li>
+                <li><a href="{{route('careers')}}" class="list-group-item {{ (request()->is('careers')) ? 'active' : '' }} "><span class="ti-linkedin"></span> Careers</a></li>
+                <li><a href="{{route('contact')}}" class="list-group-item {{ (request()->is('contact-us')) ? 'active' : '' }} "><span class="ti-email"></span> Contact Us</a></li>
 
 
             </ul>
@@ -111,7 +125,7 @@
                             @if(session()->has('isLogin'))
                                 
                                 <li>
-                                    <a href="my-profile.php" class="user user-light text-dark text-capitalize rounded5">
+                                    <a href="{{route('account')}}" class="user user-light text-dark text-capitalize rounded5">
                                         <span class="ti-user"></span>
                                         <span class="icon-name">welcome {{ session()->get('isLogin')['name'] }}</span>
                                     </a>

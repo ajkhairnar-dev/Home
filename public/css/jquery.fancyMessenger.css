@@ -1,97 +1,97 @@
-.fancyMessenger {
-    background-color: #2368AF;
-    border-radius: 28px;
-    max-width: 250px;
-    min-width: 56px;
-    display:inline-block;
-    box-shadow: 0px 0px 20px rgba(60,60,60,0.2);
-}
-.fancyMessenger * {
-    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-}
-.fancyMessenger-header {
-    position: relative;
-    height: 56px;
-    cursor: pointer;
-}
-.fancyMessenger-body,.fancyMessenger-info {
-    display: none;
-    color: white;
-    margin: 5px 5px 15px 5px;
-    font-family: Roboto, sans-serif;
-    font-size: 12px;
-}
-.fancyMessenger-body * {
-    margin-bottom: 5px;
-}
-.fancyMessenger-avatar {
-    background-image:url("assets/images/icon/call.png");
-    background-position: center;
-    background-size: 80%;
-    background-repeat: no-repeat;
-    top: 5px;
-    left: 5px;
-    width:46px;
-    height:46px;
-    border-radius: 23px;
-    position:absolute;
-}
-.fancyMessenger-available {
-    position: absolute;
-    text-align: center;
-    width: 18px;
-    height: 18px;
-    background-color: #40B681;
-    color: white;
-    font-size:12px;
-    font-weight:bold;
-    top: 0px;
-    left: 35px;
-    border-radius: 100%;
-}
-.fancyMessenger-text {
-    padding: 20px 40px 0px 60px;
-    color: white;
-    font-family: Roboto, sans-serif;
-    font-size: 13px;
-    display: none;
-}
-.fancyMessenger-info {
-    display: none;
-}
-
-/* Form elements */
-.fancyMessenger input,textarea {
-    box-sizing: border-box;
-    display: block;
-    width: 100%;
-    color: #495057;
-    border: 1px solid #ced4da;
-    padding: .25rem .5rem;
-    font-size: .875rem;
-    border-radius: .2rem;
-}
-.fancyMessenger textarea {
-    overflow: auto;
-    resize: vertical;
-}
-.fancyMessenger button:focus, textarea:focus, input:focus{
-    outline: none;
-}
-.fancyMessenger button,input[type=button] {
-    padding: .25rem .5rem;
-    font-size: .875rem;
-    border-radius: .2rem;
-    color: #212529;
-    background-color: #f8f9fa;
-    border-color: #f8f9fa;
-    display: inline-block;
-    font-weight: 400;
-    text-align: center;
-    vertical-align: middle;
-    border: 1px solid transparent;
-    cursor: pointer;
-}
-.fancyMessenger button:active,input[type=button]:active {
-    box-shadow: 0 0 0 0.25rem rgba(49, 132, 253, 0.5);
-}
+.fancyMessenger {
+    background-color: #2368AF;
+    border-radius: 28px;
+    max-width: 250px;
+    min-width: 56px;
+    display:inline-block;
+    box-shadow: 0px 0px 20px rgba(60,60,60,0.2);
+}
+.fancyMessenger * {
+    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+.fancyMessenger-header {
+    position: relative;
+    height: 56px;
+    cursor: pointer;
+}
+.fancyMessenger-body,.fancyMessenger-info {
+    display: none;
+    color: white;
+    margin: 5px 5px 15px 5px;
+    font-family: Roboto, sans-serif;
+    font-size: 12px;
+}
+.fancyMessenger-body * {
+    margin-bottom: 5px;
+}
+.fancyMessenger-avatar {
+    background-image:url("assets/images/icon/call.png");
+    background-position: center;
+    background-size: 80%;
+    background-repeat: no-repeat;
+    top: 5px;
+    left: 5px;
+    width:46px;
+    height:46px;
+    border-radius: 23px;
+    position:absolute;
+}
+.fancyMessenger-available {
+    position: absolute;
+    text-align: center;
+    width: 18px;
+    height: 18px;
+    background-color: #40B681;
+    color: white;
+    font-size:12px;
+    font-weight:bold;
+    top: 0px;
+    left: 35px;
+    border-radius: 100%;
+}
+.fancyMessenger-text {
+    padding: 20px 40px 0px 60px;
+    color: white;
+    font-family: Roboto, sans-serif;
+    font-size: 13px;
+    display: none;
+}
+.fancyMessenger-info {
+    display: none;
+}
+
+/* Form elements */
+.fancyMessenger input,textarea {
+    box-sizing: border-box;
+    display: block;
+    width: 100%;
+    color: #495057;
+    border: 1px solid #ced4da;
+    padding: .25rem .5rem;
+    font-size: .875rem;
+    border-radius: .2rem;
+}
+.fancyMessenger textarea {
+    overflow: auto;
+    resize: vertical;
+}
+.fancyMessenger button:focus, textarea:focus, input:focus{
+    outline: none;
+}
+.fancyMessenger button,input[type=button] {
+    padding: .25rem .5rem;
+    font-size: .875rem;
+    border-radius: .2rem;
+    color: #212529;
+    background-color: #f8f9fa;
+    border-color: #f8f9fa;
+    display: inline-block;
+    font-weight: 400;
+    text-align: center;
+    vertical-align: middle;
+    border: 1px solid transparent;
+    cursor: pointer;
+}
+.fancyMessenger button:active,input[type=button]:active {
+    box-shadow: 0 0 0 0.25rem rgba(49, 132, 253, 0.5);
+}

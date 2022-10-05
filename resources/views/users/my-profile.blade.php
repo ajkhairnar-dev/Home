@@ -10,6 +10,9 @@
     .error{
         color:red;
     }
+    .dashboard-section .dashboard-box .dashboard-detail .booking-box .detail-middle {
+    width: 58%;
+}
     </style> 
     <!-- section start-->
     <section class="small-section dashboard-section bg-inner" data-sticky_parent>
@@ -159,63 +162,76 @@
                                 <div class="dashboard-box">
 
                                     <div class="dashboard-title">
-                                        <h4>upcoming booking</h4>
+                                        <h4>Booking List</h4>
                                     </div>
+                                    @foreach($bookings as $b)
+                                    <div class="dashboard-detail ">
+                                        <div class="booking-box bg-white border p-3  rounded shadow-sm">
+                                            <div class="date-box">
+                                           
+                                                <span class="date">{{$b->booking_id}}</span>
+                                                <p style="color:black">{{$b->triptype}}</p>
+                                            </div>
+                                            <div class="detail-middle">
+                                                <div class="media">
+                                                    <div class="icon">
+                                                        <i class="fas fa-car"></i>
+                                                    </div>
+                                                    <div class="media-body">
+                                                        <h6 class="media-heading">{{explode(",",$b->pick_location)[0]}} to {{explode(",",$b->drop_location)[0]}}</h6>
+                                                        
+                                                        @if($b->paytype == 1)
+                                                            <span class="badge bg-success">full payment</span>
+                                                        @else
+                                                            <span class="badge bg-danger">half payment</span>
+                                                        @endif
+                                                
+                                                        <p>Amount paid: <span>INR {{$b->final_amt}}</span></p>
 
-                                    <div class="dashboard-detail ">
-                                        <div class="booking-box bg-white border p-3  rounded shadow-sm">
-                                            <div class="date-box">
-                                                <span class="date">25</span>
-                                                <span class="month">aug</span>
-                                            </div>
-                                            <div class="detail-middle">
-                                                <div class="media">
-                                                    <div class="icon">
-                                                        <i class="fas fa-car"></i>
+                                                        @if($b->paytype == 0)
+                                                             <p>Remaining amount: <span>INR {{$b->remaing_amt}}</span></p>
+                                                        @endif
+
                                                     </div>
                                                     <div class="media-body">
-                                                        <h6 class="media-heading">Nashik to Mumbai</h6>
-                                                        <p>amount paid: <span>INR 2500.00</span></p>
-                                                    </div>
-                                                    <div class="media-body">
-                                                        <h6 class="media-heading">Payment ID: aSdsadf5s1f5</h6>
-                                                        <p>Booking Date: <span>11 August 2022</span></p>
+                                                        
+                                                        <p>Travel Date: <span> {{date("F jS, Y", strtotime($b->date))}}</span></p>
+                                                        <p>Booking Date: <span>{{date("F jS, Y", strtotime($b->created_at))}}</span></p>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="detail-last">
-                                                <a href="#"><i class="fas fa-window-close" data-bs-toggle="tooltip" data-placement="top" title="cancle booking"></i></a>
-                                                <span class="badge bg-info">upcoming</span>
+                                                <!-- <a href="#"><i class="fas fa-window-close" data-bs-toggle="tooltip" data-placement="top" title="cancle booking"></i></a> -->
+                                                <!-- <span data-bs-toggle="modal" data-bs-target="#block-remark-profile"><i class="fas fa-window-close" data-bs-toggle="tooltip" data-placement="top" title="cancle booking"></i></span> -->
+                                                @if($b->bookingstatus != 4)
+                                                    <button onclick="cancelledid('{{$b->booking_id}}')" data-bs-toggle="modal" data-bs-target="#edit-profile1"><i class="fas fa-window-close" data-bs-toggle="tooltip" data-placement="top" title="cancle booking"></i></button>
+                                                @endif
+                                                @php
+                                                        if($b->bookingstatus == 4){
+                                                            echo '<span class="badge bg-danger">Cancelled</span>';
+                                                        }
+                                                        else
+                                                        {
+                                                            $date = today()->format('m/d/Y');
+                                                            if(isset($b->date) && $b->rdate!='' && $b->rdate<$date){
+                                                                echo '<span class="badge bg-info">Completed</span>';
+                                                            }
+                                                            elseif($b->date == $date) {
+                                                                echo '<span class="badge bg-info">Ongoing</span>';
+                                                            }
+                                                            elseif ($b->date > $date) {
+                                                                echo '<span class="badge bg-info">upcoming</span>';
+                                                            }
+                                                            elseif ($b->date < $date) {
+                                                                echo '<span class="badge bg-info">Completed1</span>';
+                                                            }
+                                                        }
+                                                @endphp
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="dashboard-detail ">
-                                        <div class="booking-box bg-white border p-3  rounded shadow-sm">
-                                            <div class="date-box">
-                                                <span class="date">15</span>
-                                                <span class="month">jun</span>
-                                            </div>
-                                            <div class="detail-middle">
-                                                <div class="media">
-                                                    <div class="icon">
-                                                        <i class="fas fa-car"></i>
-                                                    </div>
-                                                    <div class="media-body">
-                                                        <h6 class="media-heading">Nashik to Mumbai</h6>
-                                                        <p>amount paid: <span>INR 2500.00</span></p>
-                                                    </div>
-                                                    <div class="media-body">
-                                                        <h6 class="media-heading">Payment ID: aSdsadf5s1f5</h6>
-                                                        <p>Booking Date: <span>11 August 2022</span></p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="detail-last">
-                                                <a href="#"><i class="fas fa-window-close" data-bs-toggle="tooltip" data-placement="top" title="cancle booking"></i></a>
-                                                <span class="badge bg-danger">cancelled</span>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    @endforeach
+                                    
                                 </div>
                             </div>
 
@@ -301,6 +317,35 @@
     </div>
     <!-- edit profile modal start -->
 
+
+    <!-- edit profile modal start -->
+    <div class="modal fade edit-profile1-modal" id="edit-profile1" role="dialog" aria-labelledby="exampleModalLabel">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Are you sure want to Cancel Booking.</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="post" action="javascript:;" id="cancelbooking">
+                <div class="modal-body">
+                    @csrf
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <label for="first">Why cancelled booking ?</label>
+                            <textarea id="remark" name="remark" rows="4" cols="50" placeholder="Why are you cancelled booking ?"></textarea>
+                        </div>
+                        </div>
+              
+                </div>
+                <div class="modal-footer">
+                    <a href="javascript:;" class="btn btn-secondary" data-bs-dismiss="modal">Close</a>
+                    <button type="submit" class="btn btn-solid">Cancelled</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- edit profile modal start -->
 
     <!-- edit address modal start -->
     <div class="modal fade edit-profile-modal" id="edit-address" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -532,6 +577,14 @@
   
     
 <script>
+
+var booking_id = 0;
+ function cancelledid(bd){
+    booking_id = bd
+ }
+
+
+
     jQuery(function($){
     //passenger form validation
     if ($("#profilesubmit").length > 0) {
@@ -587,8 +640,37 @@
             }
     
         })
-    }else{
-        alert("data")
+    }
+
+
+    if ($("#cancelbooking").length > 0) {
+        console.log("jayesh")
+        $("#cancelbooking").validate({
+        
+            rules: {
+                remark: {
+                    required: true
+                }
+            },
+            messages: {
+                remark: {
+                    required: "Please enter remark"
+                }
+            },
+            submitHandler: function(form) {
+                var tk = {!! json_encode(csrf_token()) !!}
+                var object = {
+                    _token:tk,
+                    remark : $("#remark").val(),
+                    booking_id : booking_id
+                }
+
+                var url = {!! json_encode(url('cancelledbooking')) !!}
+                $.redirect(url, object, "POST");
+        
+            }
+    
+        })
     }
    
 });

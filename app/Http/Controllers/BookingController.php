@@ -6,6 +6,13 @@ use Illuminate\Http\Request;
 use DB;
 use PDF;
 use App\Models\Bookings;
+use App\Mail\OrderShipped;
+use App\Models\BookingDetails;
+use App\Models\Transcations;
+use Mail;
+
+
+
 class BookingController extends Controller
 {
     public function index(Request $request) {
@@ -97,6 +104,7 @@ class BookingController extends Controller
             $cabishupdate['customer_id'] = session()->get('isLogin')['id'];
             $cabishupdate['types'] = 0;
             $cabishupdate['points'] = (int)$bd['cabishpoint']['redeempoint'];
+            $cabishupdate['booking_id'] =  $generatebookingid;
             DB::table('cabishpoints')->insert($cabishupdate);
         }
         //get new points 
@@ -112,7 +120,7 @@ class BookingController extends Controller
         $cabishupdate['customer_id'] = session()->get('isLogin')['id'];
         $cabishupdate['types'] = 1;
         $cabishupdate['points'] = $getnewPoints;
-
+        $cabishupdate['booking_id'] =  $generatebookingid;
         DB::table('cabishpoints')->insert($cabishupdate);
 
         //update customer table for cabish point
@@ -183,7 +191,26 @@ class BookingController extends Controller
 
         session()->put('isLogin',$customer);
 
-        return view('paymentstatus',['data' => $bd]);
+        $data = Bookings::
+        join('booking_details','booking_details.booking_id','bookings.booking_id')
+        ->join('transcations','transcations.booking_id','bookings.booking_id')
+        ->join('trip_types','trip_types.id','bookings.trip_types')
+        ->where('bookings.booking_id',$booking['booking_id'])
+        ->get()->toArray();
+
+        session()->put('bid',$transaction['booking_id']);
+
+        $user['to'] = $bookingdetails['email'];
+        Mail::send('invoice',$data[0], function($message) use ($user){
+            $message->to($user['to']);
+            $message->subject('Booking Confirmed');
+        });
+
+        return redirect('payfinal');
+    }
+
+    public function payfinal(){
+        return view('paymentstatus');
     }
 
     //generate unique id
@@ -198,15 +225,10 @@ class BookingController extends Controller
 
 
     public function invoicedownload(Request $request){
-        $data = [];
-        // // echo url('/images/invoice/bg-img.jpg');
-        // view()->share('employee',$data);
-        // $pdf =  PDF::setOptions(['isHtml5ParserEnabled' => true,'isPhpEnabled' => true])->loadView('invoice', $data);
 
-        // // // download PDF file with download method
-        // return $pdf->download('pdf_file.pdf');
+       
 
-        return view('invoice');
+
     }
 
     public function payment(Request $request){
@@ -299,9 +321,6 @@ class BookingController extends Controller
 
 
     public function booking(Request $request) {
-
-        // dd($request->all());
-
         $abandonedbooking['customer_number'] = session()->get('isLogin')['mobile'];
         $abandonedbooking['trip_type'] = $request['triptype'];
         $abandonedbooking['pickup_location'] = $request['pickup'];
@@ -561,7 +580,7 @@ function findDays($pickupTime, $returnTime){
 
 function getDistance($addressFrom, $addressTo){
     // Google API key
-    $apiKey = 'AIzaSyDejTlLIDSMtBAR8FEbeJmr2CvBjwVDwpM';
+    $apiKey = 'AIzaSyCNUHEzM83jp0iv2bfq10hRI286MujcLPc';
 
     //https://maps.googleapis.com/maps/api/geocode/json?address=pathardi+phata+nashik&sensor=false&key=AIzaSyDejTlLIDSMtBAR8FEbeJmr2CvBjwVDwpM  for geocode
     //https://maps.googleapis.com/maps/api/distancematrix/json?origins=Nashik,Maharashtra,India&destinations=Mumbai,Maharashtra,India&key=AIzaSyDejTlLIDSMtBAR8FEbeJmr2CvBjwVDwpM
@@ -569,7 +588,7 @@ function getDistance($addressFrom, $addressTo){
     $origin      = str_replace(' ', '', $addressFrom);
     $destination = str_replace(' ', '', $addressTo);
 
-    $url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=$origin&destinations=$destination&key=AIzaSyDejTlLIDSMtBAR8FEbeJmr2CvBjwVDwpM";
+    $url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=$origin&destinations=$destination&key=AIzaSyCNUHEzM83jp0iv2bfq10hRI286MujcLPc";
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);

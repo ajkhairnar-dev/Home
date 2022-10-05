@@ -2,6 +2,11 @@
 @section('metakey', 'All Blogs' )
 @section('metadesc', 'All Blogs')
 @include('layouts.nav')
+@php
+    $segment1 = request()->segment(1);
+    $segment2 = request()->segment(2);
+    $segment3 = request()->segment(3);
+@endphp
 </header>
 
 
@@ -40,11 +45,11 @@
                     </div>
                     <div class="breadcrumb-content pt-0">
                         <div>
-                            <h2>Blog</h2>
+                            <h2>@php if(isset($segment2)) { echo $segment2; } else echo 'Blogs'; @endphp</h2>
                             <nav aria-label="breadcrumb" class="theme-breadcrumb">
                                 <ol class="breadcrumb">
                                     <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">blogs</li>
+                                    <li class="breadcrumb-item active" aria-current="page">@php if(isset($segment3)) { echo 'Blogs / '.$segment3; } else echo 'Blogs'; @endphp</li>
                                 </ol>
                             </nav>
                         </div>
@@ -65,7 +70,7 @@
                     <div class="blog_section blog-inner ratio_landscape">
                         <div class="row blog-list">
                             
-                            @foreach(Cache::get('posts') as $i => $c)
+                            @foreach($posts as $c)
                             <div class="col-12">
 
                                 <div class="blog-wrap blog_card wow fadeInUp">

@@ -48,12 +48,12 @@
                         <div class="footer-content">
                             <div class="footer-links">
                                 <ul>
-                                    <li><a href="index.php">Home</a></li>
-                                    <li><a href="bookcab.php">Book a Ride</a></li>
-                                    <li><a href="my-profile.php">My Profile</a></li>
-                                    <li><a href="bookcab.php">My Trips</a></li>
-                                    <li><a href="bookcab.php">Earnings</a></li>
-                                    <li><a href="cabishpoints.php">Cabish Points</a></li>
+                                    <li><a href="{{route('home')}}">Home</a></li>
+                                    <li><a href="{{route('bookride')}}">Book a Ride</a></li>
+                                    <li><a href="{{route('bookride')}}">My Profile</a></li>
+                                    <li><a href="{{route('bookride')}}">My Trips</a></li>
+                                    <li><a href="{{route('bookride')}}">Earnings</a></li>
+                                    <li><a href="{{route('cabishpoints')}}">Cabish Points</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -67,66 +67,19 @@
                     <div class="footer-content">
                         <div class="footer-place">
                             <div class="row">
+                                
+                            @foreach($mintopplaces as $b)
                                 <div class="col-4">
                                     <div class="place rounded5">
-                                        <a href="#">
-                                            <img src="{{asset('images/tour/footer/1.jpg')}}" class="img-fluid blur-up lazyload" alt="">
+                                        <a href="{{route('placeblog',$b->slug)}}">
+                                            <img src="{{env('ADMIN_URL').$b->thumbnail}}" class="img-fluid blur-up lazyload" alt="">
                                             <div class="overlay">
-                                                <h6>japan</h6>
+                                                <h6>{{$b->name}}</h6>
                                             </div>
                                         </a>
                                     </div>
                                 </div>
-                                <div class="col-4">
-                                    <div class="place rounded5">
-                                        <a href="#">
-                                            <img src="{{asset('images/tour/footer/2.jpg')}}" class="img-fluid blur-up lazyload" alt="">
-                                            <div class="overlay">
-                                                <h6>beach</h6>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="place rounded5">
-                                        <a href="#">
-                                            <img src="{{asset('images/tour/footer/3.jpg')}}" class="img-fluid blur-up lazyload" alt="">
-                                            <div class="overlay">
-                                                <h6>newyork</h6>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="place rounded5">
-                                        <a href="#">
-                                            <img src="{{asset('images/tour/footer/4.jpg')}}" class="img-fluid blur-up lazyload" alt="">
-                                            <div class="overlay">
-                                                <h6>city</h6>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="place rounded5">
-                                        <a href="#">
-                                            <img src="{{asset('images/tour/footer/5.jpg')}}" class="img-fluid blur-up lazyload" alt="">
-                                            <div class="overlay">
-                                                <h6>mountain</h6>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="place rounded5">
-                                        <a href="#">
-                                            <img src="{{asset('images/tour/footer/6.jpg')}}" class="img-fluid blur-up lazyload" alt="">
-                                            <div class="overlay">
-                                                <h6>wild</h6>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
+                            @endforeach
                             </div>
                         </div>
                     </div>

@@ -1,3 +1,6 @@
+@section('title', 'Cab Search')
+@section('metakey', 'search cabs, cabs searching, oneway cabs, oneway cabs, roundtrip cabs, roundtirp, round trip cabs, airport, airport cabs, airport pickup and drop, airport taxi, airport transfer, local city package' )
+@section('metadesc', 'get best deals on cab and holiday packages book now only with gocabish')
 @include('layouts.nav')
     </header>
     <!--  header end -->
@@ -151,7 +154,7 @@
                                                                 <div class="price_box col-md-3 md_left  d-flex justify-content-between align-items-center flex-column">
                                                                     @php
                                                                     $dd = ($c->discount)/100;
-                                                                    $price = round($c->rates+($c->rates*0.05));
+                                                                    $price = round($c->rates+($c->rates*0.00));
                                                                     $discount = round($price + ($price*$dd));
                                                                     $points = $discount*0.05;
                                                                     if($points>150){$points = 150;}
@@ -223,17 +226,21 @@
 
                                                                                         <h3 class="card__additonal-info-heading">
 
-                                                                                            includings
+                                                                                            Inclusion
                                                                                         </h3>
-                                                                                        {!! $c->inclusion !!}
+                                                                                        <ul class="includings-ul">
+                                                                                          {!! str_replace(['#kms','#afterrates'], [$kms,$c->after_rates], $c->inclusion) !!}
+                                                                                        </ul>
                                                                                     </div>
 
                                                                                     <div class="col-md-6">
                                                                                         <h3 class="card__additonal-info-heading">
 
-                                                                                            additional information
+                                                                                            Exclusion
                                                                                         </h3>
-                                                                                        {!! $c->exclusion !!}
+                                                                                        <ul class="additional__information-ul">
+                                                                                            {!! str_replace(['#kms','#afterrates'], [$kms,$c->after_rates], $c->exclusion) !!}
+                                                                                        </ul>
                                                                                     </div>
 
                                                                                     <div class="col-md-12 mt-3">
@@ -241,9 +248,12 @@
 
                                                                                             additional information
                                                                                         </h3>
-                                                                                        {!! $c->additional_information !!}
+                                                                                        <ul>
+                                                                                            {!! str_replace(['#kms','#afterrates'], [$kms,$c->after_rates], $c->additional_information) !!}
+                                                                                        </ul>
                                                                                     </div>
                                                                                 </div>
+                                                                                
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -299,5 +309,5 @@
 
 
     <!-- how to start section end -->
-@include('layouts.footerwidgets')
+
 @include('layouts.footer')

@@ -49,7 +49,7 @@
     <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 
     <link href="{{asset('css/jquery.fancyMessenger.css')}}" rel="stylesheet">
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&key=AIzaSyDejTlLIDSMtBAR8FEbeJmr2CvBjwVDwpM"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&key=AIzaSyCNUHEzM83jp0iv2bfq10hRI286MujcLPc"></script>
     
     <script type="text/javascript" src="{{asset('js/menu.js')}}"></script>
     <link rel="stylesheet" type="text/css" href="{{asset('css/menu.css')}}">
@@ -65,7 +65,33 @@
       gtag('config', 'G-W7MWVMS94R');
     </script>
     
-    
+    <style>
+      @media (max-width: 376px) {
+  .review-section .review_box .title-top {
+    padding: 10px 15px;
+  }
+  .card-details_header {
+    padding: 4px 15px !important;
+  }
+  .row-1 {
+    padding: 2px 0;
+  }
+  .fw-bolder {
+    font-size: 15px;
+  }
+  .matchbox_mobile,
+  .similiar-badge {
+    font-size: 12px;
+  }
+  .card-details_header .label-offer {
+    top: 6px;
+    left: 8px;
+  }
+  .guest-detail {
+    padding: 6px 15px;
+  }
+}
+      </style>
     
 
 

@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Mail\OrderShipped;
+use Illuminate\Support\Facades\Mail;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +14,18 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+
+
+
+// Route::get('/invoice', function(){
+//     $mailData = [
+//         "name" => "Test NAME",
+//         "dob" => "12/12/1990"
+//     ];
+
+//     Mail::to("domainsdefault@gmail.com")->send(new OrderShipped($mailData));
+// });
 
 Route::get('clear-cache', function() {
     Artisan::call('route:clear');
@@ -39,6 +52,9 @@ Route::get('/my-profile', [App\Http\Controllers\HomeController::class, 'index'])
 Route::get('/my-trips', [App\Http\Controllers\HomeController::class, 'trips'])->name('mybookings');
 Route::get('/earnings', [App\Http\Controllers\HomeController::class, 'earnings'])->name('earnings');
 Route::post('/updateprofile', [App\Http\Controllers\HomeController::class, 'updateprofile']);
+Route::post('/cancelledbooking', [App\Http\Controllers\HomeController::class, 'cancelledbooking']);
+
+
 
 Route::get('cabishpoints')->name('cabishpoints');
 
@@ -59,6 +75,7 @@ Route::get('/careers', [App\Http\Controllers\PagesController::class, 'careers'])
 Route::get('/contact-us', [App\Http\Controllers\PagesController::class, 'contact_page'])->name('contact');
 Route::get('/blogs', [App\Http\Controllers\PagesController::class, 'blogs'])->name('blogs');
 Route::get('/blogs/{slug}', [App\Http\Controllers\PagesController::class, 'single_blog'])->name('single_blog');
+Route::get('/blogs/topplaces/{slug}', [App\Http\Controllers\PagesController::class, 'topplaces'])->name('placeblog');
 
 
 
@@ -69,7 +86,7 @@ Route::get('/paymentstatus', [App\Http\Controllers\BookingController::class, 'pa
 Route::get('/invoice', [App\Http\Controllers\BookingController::class, 'invoicedownload']);
 Route::post('/customer-registration', [App\Http\Controllers\BookingController::class, 'customerregistration']);
 Route::get('/logout', [App\Http\Controllers\BookingController::class, 'logout']);
-
+Route::get('/payfinal', [App\Http\Controllers\BookingController::class, 'payfinal']);
 /*forcalcualtin*/
 Route::get('/search/{s?}', [App\Http\Controllers\BookingController::class, 'search'])->name('search');
 Route::post('/booking', [App\Http\Controllers\BookingController::class, 'booking']);

@@ -29,7 +29,11 @@ trait MyTraits {
     }
     
     
-    
+    public function mintolplace() {
+        return Cache::rememberForever('mintopplace', function () {
+            return DB::table('bloglocation')->where('featured','1')->limit(6)->get();
+        });
+    }
     
 }
 

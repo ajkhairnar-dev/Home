@@ -12,9 +12,9 @@
 
 
 
-
+<form method="post" action="javascript:;" id="bookingform">
 <section class="small-section">
-        <form method="post" action="javascript:;" id="bookingform">
+       
         @csrf
            <div class="container">
               <div class="row">
@@ -210,7 +210,7 @@
                                     </div>
                                     <div class="form-group form-check">
                                     <input type="checkbox" class="form-check-input" id="acceptTC" name="acceptTC">
-                                    <label style="margin-left:5px" class="form-check-label" for="exampleCheck1">Accept Terms and condtions</label>
+                                    <label style="margin-left:5px" class="form-check-label" for="exampleCheck1">By proceeding, you agree to gocabish <a href="{{route('terms')}}" target="_blank" style="text-decoration:underline">terms and conditions</a>, <a target="_blank" href="{{route('privacy')}}" style="text-decoration:underline">privacy policy</a></label>
                                     
                                     </div>
                                     <label id="acceptTC-error" class="error" for="acceptTC" style=""></label>
@@ -469,10 +469,11 @@
                                 <div class="footer-content">
                                      <div class="review_box-inner">
                                         <ul class="booking_calculation">
-                                             <li><span>Base Fare <b>₹11046</b></span></li>
-                                             <li><span>Night Charges <b>₹250</b></span></li>
-                                             <li><span>Taxes & Fees <b>₹58</b></span></li>
-                                             <li class="footer-title"><span>Total <b>₹58</b></span></li>
+                                             <li><span>Base Fare <b>{{$base = round(($data['price']-$data['toll_tax']))}}</b></span></li>
+                                             <li><span>Night Charges <b>₹00</b></span></li>
+                                             <li><span>Toll<b>₹{{$data['toll_tax']}}</b></span></li>
+                                             <li><span>Taxes<b>₹{{round($base*0.00)}}</b></span></li>
+                                             <li class="footer-title"><span>Total <b>₹{{$data['price']}}</b></span></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -575,7 +576,7 @@
                                             </tr>
                                             <tr>
                                                 <td colspan="2">
-                                                    <button type="submit" class="bluePrimarybtn payNow font22 appendBottom10">Pay ₹ <span id="showFinalAmount">{{round($data->price)}}</span> Now</button>
+                                                    <button type="submit" class="bluePrimarybtn payNow font22 appendBottom10">Pay ₹ <span class="showFinalAmount">{{round($data->price)}}</span> Now</button>
                                                      <!-- <a href="javascript:;" id="testButton" class="bluePrimarybtn payNow font22 appendBottom10">Pay ₹ <span>{{round($data->price)}}</span> Now</a> -->
                                                 </td>
                                             </tr>
@@ -595,7 +596,7 @@
                 
               </div>
            </div>
-        </form>
+        
     </section>
 
 
@@ -604,11 +605,12 @@
 <div class="book-panel">
    <h6 class="mb-0 text">grand total:
       <span class="d-inline-block txtlight">
-      <a href="#price_details_link">₹1250<i class="fas fa-info-circle"></i></span></a>
+      <a href="#price_details_link">₹ <span class="showFinalAmount">{{round($data->price)}}</span><i class="fas fa-info-circle"></i></span></a>
       </span>
    </h6>
-   <button type="button" onclick="window.location.href='payment_success.php';" class="btn bottom-btn theme-color">continue</button>
+   <button type="submit"  class="btn bottom-btn theme-color">continue</button>
 </div>
+</form>
 <!-- book now section end -->
 <!-- how to start section end -->
 <!-- how to start section end -->
@@ -643,7 +645,7 @@ $(document).ready(function(){
         $(`#appliedCoupon`).text("Apply");
         $("#promocodeText").val('')
         $( ".promoaction" ).prop( "checked", false);
-        $(`#showFinalAmount`).text(amount);
+        $(`.showFinalAmount`).text(amount);
     }); 
 
     //select promocode
@@ -664,7 +666,7 @@ $(document).ready(function(){
             finaldiscountAmount = discountAmount
             $(`#appliedCoupon`).text("Applied");
             finalamount = Number(amount) -  Number(finaldiscountAmount);
-            $(`#showFinalAmount`).text(finalamount);
+            $(`.showFinalAmount`).text(finalamount);
         }
         else{
             $(".selectcoupon").show()
@@ -676,109 +678,141 @@ $(document).ready(function(){
 jQuery(function($){
 //passenger form validation
   if ($("#bookingform").length > 0) {
-        $("#bookingform").validate({
-        
-        rules: {
-            fullName: {
-                required: true,
-                maxlength: 50
-            },
-            gender:{
-                required:true
-            },
-            email:{
-                required: true,
-                maxlength: 50,
-                email: true
-            },
-            contact:{
-                required: true,
-                digits:true,
-                minlength: 10,
-                maxlength:10
-            },
-            pickup:{
-                required: true
-            },
-            drop:{
-                required: true
-            },
-            specialrequest:{
-                required:false
-            },
-            acceptTC:{
-                required:true
-            }
+    $("#bookingform").validate({
+      
+    rules: {
+        fullName: {
+            required: true,
+            maxlength: 50
         },
-        messages: {
-            fullName: {
-            required: "Please enter fullname",
-            maxlength: "The fullName should less than or equal to 50 characters"
-            },
-            gender:{
-                required: "Please select gender",
-            },
-            email:{
-                required: "Please enter valid email",
-                email: "Please enter valid email",
-                maxlength: "The email name should less than or equal to 50 characters",
-            },
-            contact:{
-                required: "Please enter contact",
-                maxlength: "Your contact maxlength should be 10 digit."
-            },
-            pickup: {
-            required: "Please enter pickup address"
-            },
-            drop: {
-            required: "Please enter drop address"
-            },
-            specialrequest:{
-                required:"Optional"
-            },
-            acceptTC:{
-                required:"Please Accept T&C."
-            }
+        gender:{
+            required:true
         },
-
-        
-        submitHandler: function(form) {
-        var tk = {!! json_encode(csrf_token()) !!}
-        var object = {
-            _token:tk,
-            userdetails :{
-                fullName : $("#fullName").val(),
-                gender : $("#gender").val(),
-                email : $("#email").val(),
-                contact : $("#contact").val(),
-                pickup : $(".pickupadd").val(),
-                drop : $(".dropadd").val(),
-                specialrequest : $("#specialrequest").val(),
-                acceptTC : $("#acceptTC").val()
-            },
-            payment : {
-                paytype : paytype,
-                amount : finalamount == 0 ? Number(amount) : Number(finalamount),
-                remaining: paytype == "fullpayment" ? 0 : Number(mainprice) - Number(finalamount),
-                promocode : finalselectedPromocode,
-                discountamount : finaldiscountAmount,
-            },
-            vehicles:{!! json_encode($vdata) !!},
-            distance:{!! json_encode($distance) !!},
-            hrs : {!! json_encode($hrs) !!},
-            triptype:{!! json_encode($triptype) !!},
-            sitesetting : {!! json_encode($sitesetting) !!}
+        email:{
+            required: true,
+            maxlength: 50,
+            email: true
+        },
+        contact:{
+            required: true,
+            digits:true,
+            minlength: 10,
+            maxlength:10
+        },
+        pickup:{
+            required: true
+        },
+        drop:{
+            required: true
+        },
+        specialrequest:{
+            required:false
+        },
+        acceptTC:{
+            required:true
         }
-
-        console.log(object);
-    
-        var url = {!! json_encode(url('cabishpoint')) !!}
-        $.redirect(url, object, "POST");
-    
+    },
+    messages: {
+        fullName: {
+          required: "Please enter fullname",
+          maxlength: "The fullName should less than or equal to 50 characters"
+        },
+        gender:{
+            required: "Please select gender",
+        },
+        email:{
+            required: "Please enter valid email",
+            email: "Please enter valid email",
+            maxlength: "The email name should less than or equal to 50 characters",
+        },
+        contact:{
+            required: "Please enter contact",
+            maxlength: "Your contact maxlength should be 10 digit."
+        },
+        pickup: {
+          required: "Please enter pickup address"
+        },
+        drop: {
+          required: "Please enter drop address"
+        },
+        specialrequest:{
+            required:"Optional"
+        },
+        acceptTC:{
+            required:"Please Accept T&C."
         }
-    })
-   }
+    },
+
+    
+    submitHandler: function(form) {
+      var tk = {!! json_encode(csrf_token()) !!}
+      var object = {
+        _token:tk,
+        userdetails :{
+            fullName : $("#fullName").val(),
+            gender : $("#gender").val(),
+            email : $("#email").val(),
+            contact : $("#contact").val(),
+            pickup : $(".pickupadd").val(),
+            drop : $(".dropadd").val(),
+            specialrequest : $("#specialrequest").val(),
+            acceptTC : $("#acceptTC").val()
+        },
+        payment : {
+            paytype : paytype,
+            amount : finalamount == 0 ? Number(amount) : Number(finalamount),
+            remaining: paytype == "fullpayment" ? 0 : Number(mainprice) - Number(finalamount),
+            promocode : finalselectedPromocode,
+            discountamount : finaldiscountAmount,
+        },
+        vehicles:{!! json_encode($vdata) !!},
+        distance:{!! json_encode($distance) !!},
+        hrs : {!! json_encode($hrs) !!},
+        triptype:{!! json_encode($triptype) !!},
+        sitesetting : {!! json_encode($sitesetting) !!}
+      }
+
+      console.log(object);
+   
+      var url = {!! json_encode(url('cabishpoint')) !!}
+      $.redirect(url, object, "POST");
+   
+    }
+  })
+ }
 });
+
+
+let allInputs = document.querySelectorAll("input");
+        let allTextarea = document.querySelectorAll("textarea");
+        let stickyStuff = document.querySelector(".review__booking");
+        console.log(allInputs, allTextarea);
+
+
+        allInputs.forEach((event) => {
+            event.addEventListener("focus", () => {
+                stickyStuff.style.position = 'static';
+            });
+        });
+
+        allInputs.forEach((event) => {
+            event.addEventListener("focusout", () => {
+                stickyStuff.style.position = 'sticky';
+            });
+        });
+
+
+        allTextarea.forEach((event) => {
+            event.addEventListener("focus", () => {
+                stickyStuff.style.position = 'static';
+            });
+        });
+
+        allTextarea.forEach((event) => {
+            event.addEventListener("focusout", () => {
+                stickyStuff.style.position = 'sticky';
+            });
+        });
 
 </script>
 
