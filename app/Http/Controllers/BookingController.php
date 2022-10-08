@@ -237,8 +237,11 @@ class BookingController extends Controller
     }
 
 
-    public function search(Request $request) {
+    
+  
 
+    public function search(Request $request) {
+        
         session()->put('searchfilter', $request->all());
 
         $trip = $request->query('triptype');
@@ -361,6 +364,17 @@ function checkcitystatus($city) {
         return false;
     } else return true;
 }
+
+
+function getActivePromoCode($request){
+    $data = DB::select("SELECT *  promocodes as p  (date(NOW()) between p.start_date  AND p.end_date) 
+    and p.status = 1 and p.`type` = '".ONEWAY."' ORDER BY p.id ASC");
+
+    return $data;
+}
+
+
+
 
 function oneway($request) {
 
