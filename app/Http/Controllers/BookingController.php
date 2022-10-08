@@ -276,8 +276,9 @@ class BookingController extends Controller
             break;
         case "ROUNDTRIP":
             $data = roundtrip($request);
-            
-            $extracity = $request->query('round');
+           
+            $extracity= $request->has('round') ? $request->query('round') : [];
+            // $extracity = isset($request->query('round')) ? $request->query('round') : "";
             if(count($extracity) != 0){
                 $tripmeta['drop'] = $extracity[count($extracity)-1];
             }
@@ -494,6 +495,7 @@ function localtrip($request) {
 
 function roundtrip($request){
     
+    // dd($request->query('pickup'));
     
     $lpack = DB::table('round_packages')
     ->select('id')
@@ -557,6 +559,7 @@ function roundtrip($request){
             $totalRate = $totalavg;
         } else {$totalRate = $totalKm;}
                 
+        
         $resultdata = DB::select("SELECT lop.id, lop.pickup, lor.rates, lor.after_rates,lor.discount,
                     vt.`type` as 'vehicletype', vt.title as 'vehicletitle', vt.image as 'vehicleimg' ,  vt.seat, vt.ac, vt.ratings, vt.stars,
                     tt.code , tt.inclusion , tt.exclusion , tt.additional_information
@@ -565,7 +568,7 @@ function roundtrip($request){
                     INNER JOIN vehicle_types as vt ON lor.vehicle_id = vt.id
                     INNER JOIN trip_types as tt ON lop.trip_types = tt.code
                     where lop.id = '".$lpack->id."' ORDER BY vt.id ASC");
-        
+     
         return [$resultdata, $totalRate, $allowance];
 
     }

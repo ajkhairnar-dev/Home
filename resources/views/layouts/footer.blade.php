@@ -171,6 +171,34 @@
 <!-- / -->
 
 <script>
+
+    // filteration on top pages
+    $( window ).load(function() {
+        // var filteration = 
+
+       var filteration =  {!! json_encode( session()->get('searchfilter') ) !!};
+       $('.open-select-top-filteration').val(filteration.triptype);
+        console.log(filteration)
+        if(filteration.triptype == "ONEWAY"){
+            $("#oneway-top-type").prop("checked", true); 
+            $('#oneway-pickup').val(filteration.pickup);
+            $('#oneway-drop').val(filteration.drop);
+            $('#oneway-ddate').val(filteration.ddate);
+            $('#oneway-dtime').val(filteration.dtime);
+        }else if(filteration.triptype == "ROUNDTRIP"){
+     
+            $("#round-top-type").prop("checked", true); 
+            $('#oneway').hide();
+            $('#roundtrip').show();
+            $('#round-pickup').val(filteration.pickup);
+            $('#round-drop').val(filteration.drop);
+            $('#round-ddate').val(filteration.ddate);
+            $('#round-dtime').val(filteration.dtime);
+            $('#round-rdate').val(filteration.rdate);
+        }
+       
+    });
+
     $(document).ready(function() {
         $('.menu-tab').click(function() {
             $('.menu-hide').toggleClass('show');

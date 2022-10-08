@@ -27,18 +27,18 @@
                             @endphp 
 
                             
-                            <input type="text" class="form-control open-select" placeholder="to" value="{{session()->get('searchfilter')['triptype']}}">
+                            <input type="text" class="form-control open-select-top-filteration"  placeholder="to" value="">
 
                             <div class="selector-box-flight">
 
                                 <div class="form-check">
-                                    <input class="form-check-input radio_animated" type="radio" name="exampleRadios" id="exampleRadios1" value="oneway" checked="checked" tabindex="0">
+                                    <input class="form-check-input radio_animated" type="radio" name="exampleRadios" id="oneway-top-type" value="oneway" tabindex="0">
                                     <label class="form-check-label" for="exampleRadios1">
                                         ONEWAY
                                     </label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input radio_animated" type="radio" name="exampleRadios" id="exampleRadios2" value="roundtrip" tabindex="0">
+                                    <input class="form-check-input radio_animated" type="radio" name="exampleRadios" id="round-top-type" value="roundtrip" tabindex="0">
                                     <label class="form-check-label" for="exampleRadios2">
                                         ROUNDTIRP
                                     </label>
@@ -48,7 +48,7 @@
                                     <label class="form-check-label" for="exampleRadios3">
                                         LOCAL
                                     </label> -->
-                                    <input class="form-check-input radio_animated" type="radio" name="exampleRadios" id="exampleRadios4" value="airport" tabindex="0">
+                                    <input class="form-check-input radio_animated" type="radio" name="exampleRadios" id="" value="airport" tabindex="0">
                                     <label class="form-check-label" for="exampleRadios4">
                                         LOCALTRIP
                                     </label>
@@ -59,29 +59,36 @@
 
                         <div class="search_result">
                             <div class="left-part " id="oneway">
+                                <form action="/search" method="get" autocomplete="off">
                                 <div class="form-flex">
                                     <div class="search-body">
                                         <h6>PICKUP LOCATION</h6>
-                                        <input type="text"  class="form-control open-select" id="search_input" placeholder="pick up" value="">
+                                        <input type="text" name="pickup"  class="form-control open-select" id="oneway-pickup" placeholder="pick up">
                                     </div>
                                     <div id="droplocation" class="search-body">
                                         <h6>DROP LOCATION</h6>
-                                        <input type="text" value="" class="form-control open-select" placeholder="drop off">
+                                        <input type="text" name="drop" class="form-control open-select" id="oneway-drop" placeholder="drop off">
                                     </div>
                                     <div class="search-body">
                                         <h6>DEPATURE</h6>
-                                        <input placeholder="pickup date & time" value="02:05 11/13/2019" class="datetimepicker" />
+                                        <input placeholder="pickup date & time" name="ddate" id="oneway-ddate" class="datetimepicker" placeholder="date" />
+                                    </div>
+                                    <div class="search-body">
+                                        <h6>TIME</h6>
+                                        <input type="text" name="dtime"  class="form-control timepicker" id="oneway-dtime" placeholder="time">
                                     </div>
                                     <div class="search-body btn-search">
                                         <div class="right-part">
-                                            <a href="cablist.php" class="btn btn-solid color1 rounded5">search</a>
+                                            <button type="submit" class="btn btn-solid color1 rounded5">search</button>
                                         </div>
                                     </div>
+                                    
                                 </div>
+                                </form>
                             </div>
 
 
-
+<!-- 
                             <div class="left-part " id="airport" style="display:none;">
                                 <div class="form-flex">
                                     <div class="search-body">
@@ -110,25 +117,29 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
 
                             <div class="left-part " id="roundtrip" style="display:none;">
                                 <div class="form-flex">
                                     <div class="search-body">
                                         <h6>From</h6>
-                                        <input type="text" value="Paris, France" class="form-control open-select" id="exampleInputEmail1" placeholder="pick up">
+                                        <input type="text" class="form-control open-select" name="pickup" id="round-pickup" placeholder="pick up">
                                     </div>
                                     <div class="search-body">
                                         <h6>To</h6>
-                                        <input type="text" value="Toulouse, France" class="form-control open-select" placeholder="drop off">
+                                        <input type="text"  class="form-control open-select" name="drop" id="round-drop"  placeholder="drop off">
                                     </div>
                                     <div class="search-body">
-                                        <h6>pickup</h6>
-                                        <input placeholder="pickup date & time" value="02:05 11/13/2019" id="pickup" />
+                                        <h6>Date</h6>
+                                        <input placeholder="pickup date & time" name="ddate" id="round-ddate" class="datetimepicker"/>
+                                    </div>
+                                    <div class="search-body">
+                                        <h6>TIME</h6>
+                                        <input type="text" name="dtime" class="form-control timepicker" id="round-dtime" placeholder="time">
                                     </div>
                                     <div class="search-body">
                                         <h6>return</h6>
-                                        <input placeholder="drop off date & time" value="02:05 12/13/2019" id="dropoff" />
+                                        <input placeholder="pickup date & time" name="rdate" id="round-rdate" class="datetimepicker1267" placeholder="date" />
                                     </div>
                                     <!-- <div id="extracity"></div> -->
                                     <!-- <div class="search-body btn-search">
